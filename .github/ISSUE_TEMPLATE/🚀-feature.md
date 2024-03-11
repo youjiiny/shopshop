@@ -1,7 +1,7 @@
 ---
 name: "\U0001F680 FEATURE"
 about: Feature 작업 사항을 입력해주세요
-title: ''
+title: "[type/{branch_name}] 구현한 기능을 명사형으로 작성"
 labels: "기능 \U0001F527"
 assignees: Yujin-Jeong-dev
 
