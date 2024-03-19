@@ -16,7 +16,11 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "react", "prettier"],
-  "rules": {},
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "react/react-in-jsx-scope": "off"
+  },
   "settings": {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx", ".js"]
