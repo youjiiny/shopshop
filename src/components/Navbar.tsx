@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
-import { socialLogin, socialLogout } from 'api/auth';
 import User from './User';
-import { User as FirebaseUser } from 'firebase/auth';
+import { useAuth } from 'context/AuthContext';
+import { logout } from 'api/auth';
 
 const Navbar = () => {
-  const [user, setUser] = useState<FirebaseUser | null>();
-  const handleLogin = async () => {
-    const user = await socialLogin();
-    setUser(user);
-  };
-  const handleLogout = () => {
-    socialLogout();
-    setUser(null);
-  };
+  const user = useAuth();
   return (
     <header className='flex justify-between p-2'>
       <Link to='/' className='flex text-3xl text-primary'>
@@ -28,8 +19,8 @@ const Navbar = () => {
           <FaPencilAlt />
         </Link>
         {!user && <Link to='/signin'>Login</Link>}
-        {user && <User user={user} />}
-        {user && <button onClick={handleLogout}>Logout</button>}
+        {user && <User user={user!} />}
+        {user && <button onClick={logout}>Logout</button>}
       </nav>
     </header>
   );

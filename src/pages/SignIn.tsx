@@ -1,3 +1,4 @@
+import { signInWithGithub, signInWithGoogle } from 'api/auth';
 import React, { useState } from 'react';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { MdArrowForwardIos } from 'react-icons/md';
@@ -8,6 +9,12 @@ const SignIn = () => {
     id: '',
     password: '',
   });
+  const handleLoginGoogle = async () => {
+    const user = await signInWithGoogle();
+  };
+  const handleLoginGithub = async () => {
+    const user = await signInWithGithub();
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setForm({ ...form, [id]: value });
@@ -18,11 +25,17 @@ const SignIn = () => {
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex flex-col gap-4 mb-11'>
-        <button className='w-96 h-10 flex justify-center items-center gap-2 bg-google text-white rounded'>
+        <button
+          className='w-96 h-10 flex justify-center items-center gap-2 bg-google text-white rounded'
+          onClick={handleLoginGoogle}
+        >
           <FaGoogle />
           구글로 로그인
         </button>
-        <button className='w-96 h-10 flex justify-center items-center gap-2 bg-github text-white rounded'>
+        <button
+          className='w-96 h-10 flex justify-center items-center gap-2 bg-github text-white rounded'
+          onClick={handleLoginGithub}
+        >
           <FaGithub />
           깃허브로 로그인
         </button>

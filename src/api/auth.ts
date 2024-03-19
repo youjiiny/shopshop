@@ -1,36 +1,49 @@
 import {
+  GithubAuthProvider,
   GoogleAuthProvider,
-  User,
-  //GithubAuthProvider,
+  User as FirebaseUser,
+  onAuthStateChanged,
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
 import { auth } from '../api/firebase';
 
-const provider = new GoogleAuthProvider();
-//const githubProvider = new GithubAuthProvider();
-provider.setCustomParameters({
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
+googleProvider.setCustomParameters({
   prompt: 'select_account',
 });
 
-export const socialLogin = async () => {
+export const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, provider);
-    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
-    console.log('user', user);
     return user;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const socialLogout = async () => {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      // An error happened.
-    });
+export const signInWithGithub = async () => {
+  try {
+    const result = await signInWithPopup(auth, githubProvider);
+    const user = result.user;
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const onUserStateChange = (
+  callback: (user: FirebaseUser | null) => void,
+) => {
+  onAuthStateChanged(auth, (user) => {
+    const updatedUser = user ? user : null;
+    callback(updatedUser);
+  });
+};
+
+export const logout = async () => {
+  return await signOut(auth);
 };
