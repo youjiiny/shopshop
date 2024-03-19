@@ -1,8 +1,11 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
+import User from './User';
+import { useAuth } from 'context/AuthContext';
+import { logout } from 'api/auth';
 
 const Navbar = () => {
+  const user = useAuth();
   return (
     <header className='flex justify-between p-2'>
       <Link to='/' className='flex text-3xl text-primary'>
@@ -15,7 +18,9 @@ const Navbar = () => {
         <Link to='products/new'>
           <FaPencilAlt />
         </Link>
-        <button>Login</button>
+        {!user && <Link to='/signin'>Login</Link>}
+        {user && <User user={user!} />}
+        {user && <button onClick={logout}>Logout</button>}
       </nav>
     </header>
   );
