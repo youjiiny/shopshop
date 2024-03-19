@@ -9,9 +9,7 @@ const Navbar = () => {
   const [user, setUser] = useState<FirebaseUser | null>();
   const handleLogin = async () => {
     const user = await socialLogin();
-    //console.log('uuser', await socialLogin());
     setUser(user);
-    //socialLogin().then((user) => setUser(user));
   };
   const handleLogout = () => {
     socialLogout();
@@ -29,7 +27,7 @@ const Navbar = () => {
         <Link to='products/new'>
           <FaPencilAlt />
         </Link>
-        {!user && <button onClick={handleLogin}>Login</button>}
+        {!user && <Link to='/signin'>Login</Link>}
         {user && <User user={user} />}
         {user && <button onClick={handleLogout}>Logout</button>}
       </nav>

@@ -10,6 +10,8 @@ import NewProduct from 'pages/NewProduct';
 import MyCart from 'pages/MyCart';
 import Home from 'pages/Home';
 import NotFound from 'pages/NotFound';
+import SignIn from 'pages/SignIn';
+import SignUp from 'pages/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
       {
         path: '/carts',
         element: <MyCart />,
+      },
+      {
+        path: '/signin',
+        element: <SignIn />,
+      },
+      {
+        path: '/signup',
+        element: <SignUp />,
       },
     ],
   },
