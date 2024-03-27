@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
 import User from './User';
-import { useAuth } from 'context/AuthContext';
+import { useAuthContext } from 'context/AuthContext';
 import { logout } from 'api/auth';
 
 const Navbar = () => {
-  const user = useAuth();
+  const user = useAuthContext();
   return (
     <header className='flex justify-between p-2'>
       <Link to='/' className='flex text-3xl text-primary'>

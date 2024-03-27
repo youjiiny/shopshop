@@ -8,7 +8,7 @@ import {
 import { User as FirebaseUser } from 'firebase/auth';
 import { onUserStateChange } from 'api/auth';
 
-type User = FirebaseUser | null;
+type User = (FirebaseUser & { isAdmin?: boolean }) | null;
 
 export const AuthContext = createContext<User>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -21,6 +21,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
+export const useAuthContext = () => {
   return useContext(AuthContext);
 };

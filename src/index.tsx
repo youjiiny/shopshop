@@ -12,6 +12,7 @@ import Home from 'pages/Home';
 import NotFound from 'pages/NotFound';
 import SignIn from 'pages/SignIn';
 import SignUp from 'pages/SignUp';
+import ProtectedRoute from 'pages/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -30,19 +31,35 @@ const router = createBrowserRouter([
       },
       {
         path: '/products/new',
-        element: <NewProduct />,
+        element: (
+          <ProtectedRoute requireUser requireAdmin>
+            <NewProduct />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/carts',
-        element: <MyCart />,
+        element: (
+          <ProtectedRoute requireUser>
+            <MyCart />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/signin',
-        element: <SignIn />,
+        element: (
+          <ProtectedRoute requireUser={false}>
+            <SignIn />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/signup',
-        element: <SignUp />,
+        element: (
+          <ProtectedRoute requireUser={false}>
+            <SignUp />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
