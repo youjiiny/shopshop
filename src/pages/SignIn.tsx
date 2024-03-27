@@ -1,4 +1,8 @@
-import { signInWithGithub, signInWithGoogle } from 'api/auth';
+import {
+  loginWithEmailWithPassword,
+  signInWithGithub,
+  signInWithGoogle,
+} from 'api/auth';
 import React, { useState } from 'react';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { MdArrowForwardIos } from 'react-icons/md';
@@ -21,6 +25,9 @@ const SignIn = () => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const email = form.id;
+    const password = form.password;
+    loginWithEmailWithPassword(email, password);
   };
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
@@ -63,7 +70,7 @@ const SignIn = () => {
           <label htmlFor='password'>비밀번호</label>
           <input
             className='w-96 h-10 p-2 border border-neutral-400 rounded'
-            type='text'
+            type='password'
             id='password'
             placeholder='비밀번호를 입력해주세요.'
             onChange={handleChange}

@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth } from '../api/firebase';
 
@@ -29,6 +31,40 @@ export const signInWithGithub = async () => {
   try {
     const result = await signInWithPopup(auth, githubProvider);
     const user = result.user;
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const signUpWithEmailAndPassword = async (
+  email: string,
+  password: string,
+) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const loginWithEmailWithPassword = async (
+  email: string,
+  password: string,
+) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
     return user;
   } catch (error) {
     console.error(error);
