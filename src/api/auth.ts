@@ -5,8 +5,12 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  User,
 } from 'firebase/auth';
-import { auth } from '../api/firebase';
+import { auth, db } from '../api/firebase';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -35,13 +39,58 @@ export const signInWithGithub = async () => {
   }
 };
 
-export const onUserStateChange = (
-  callback: (user: FirebaseUser | null) => void,
+export const signUpWithEmailAndPassword = async (
+  email: string,
+  password: string,
 ) => {
-  onAuthStateChanged(auth, (user) => {
-    const updatedUser = user ? user : null;
-    callback(updatedUser);
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
+    const adminRef = await addDoc(collection(db, 'admins'), {
+      uid: user.uid,
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const loginWithEmailWithPassword = async (
+  email: string,
+  password: string,
+) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const onUserStateChange = <T>(callback: (user: T | null) => void) => {
+  onAuthStateChanged(auth, async (user) => {
+    const updatedUser = user ? await checkAdminUser(user) : null;
+    callback(updatedUser as T);
   });
+};
+
+const checkAdminUser = async (user: FirebaseUser) => {
+  const adminRef = collection(db, 'admins');
+  const q = query(adminRef, where('uid', '==', user.uid));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    return { ...user, isAdmin: true };
+  }
+  return user;
 };
 
 export const logout = async () => {
