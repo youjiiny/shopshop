@@ -1,13 +1,15 @@
-import React from 'react';
 import './App.css';
 import Navbar from 'components/Navbar';
-import { Outlet } from 'react-router-dom';
-import { AuthContext, AuthProvider } from 'context/AuthContext';
+import { Outlet, useLocation } from 'react-router-dom';
+import { AuthProvider } from 'context/AuthContext';
 
 function App() {
+  const location = useLocation();
   return (
     <AuthProvider>
-      <Navbar />
+      {location.pathname !== '/signin' && location.pathname !== '/signup' && (
+        <Navbar />
+      )}
       <Outlet />
     </AuthProvider>
   );
