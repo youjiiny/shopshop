@@ -20,60 +20,44 @@ googleProvider.setCustomParameters({
 });
 
 export const signInWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
-    return user;
-  } catch (error) {
-    console.error(error);
-  }
+  const result = await signInWithPopup(auth, googleProvider);
+  const user = result.user;
+  return user;
 };
 
 export const signInWithGithub = async () => {
-  try {
-    const result = await signInWithPopup(auth, githubProvider);
-    const user = result.user;
-    return user;
-  } catch (error) {
-    console.error(error);
-  }
+  const result = await signInWithPopup(auth, githubProvider);
+  const user = result.user;
+  return user;
 };
 
 export const signUpWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    const user = userCredential.user;
-    const adminRef = await addDoc(collection(db, 'admins'), {
-      uid: user.uid,
-    });
-    return user;
-  } catch (error) {
-    console.error(error);
-  }
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
+  const user = userCredential.user;
+  const adminRef = await addDoc(collection(db, 'admins'), {
+    uid: user.uid,
+  });
+  return user;
 };
 
 export const loginWithEmailWithPassword = async (
   email: string,
   password: string,
 ) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    const user = userCredential.user;
-    return user;
-  } catch (error) {
-    console.error(error);
-  }
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
+  const user = userCredential.user;
+  return user;
 };
 
 export const onUserStateChange = <T>(callback: (user: T | null) => void) => {

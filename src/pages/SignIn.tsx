@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SignIn = () => {
   const [form, setForm] = useState<{ id: string; password: string }>({
@@ -14,20 +15,35 @@ const SignIn = () => {
     password: '',
   });
   const handleLoginGoogle = async () => {
-    const user = await signInWithGoogle();
+    try {
+      await signInWithGoogle();
+      toast.success('로그인 성공!');
+    } catch (error) {
+      toast.error('로그인에 실패했습니다.');
+    }
   };
   const handleLoginGithub = async () => {
-    const user = await signInWithGithub();
+    try {
+      await signInWithGithub();
+      toast.success('로그인 성공!');
+    } catch (error) {
+      toast.error('로그인에 실패했습니다.');
+    }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setForm({ ...form, [id]: value });
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = form.id;
     const password = form.password;
-    loginWithEmailWithPassword(email, password);
+    try {
+      await loginWithEmailWithPassword(email, password);
+      toast.success('로그인 성공!');
+    } catch (error) {
+      toast.error('로그인에 실패했습니다.');
+    }
   };
   return (
     <div className='flex flex-col justify-center items-center h-screen'>

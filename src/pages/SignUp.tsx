@@ -1,5 +1,6 @@
 import { signUpWithEmailAndPassword } from 'api/auth';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import type { CompanyUserSignUpType } from 'types/auth';
 import { EMAIL_REGEX, PASSWORD_REGEX } from 'utils/checkEffectiveness';
 
@@ -18,10 +19,17 @@ const SignUp = () => {
     mode: 'onChange',
   });
   const password = watch('password');
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(async (data) => {
     const email = data.email;
     const password = data.password;
-    signUpWithEmailAndPassword(email, password);
+    try {
+      await signUpWithEmailAndPassword(email, password);
+      toast.success('회원가입 성공!');
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        toast.error('이미 사용 중인 이메일입니다.');
+      } else toast.error('회원가입에 실패했습니다.');
+    }
   });
 
   return (
