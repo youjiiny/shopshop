@@ -36,66 +36,66 @@ const NewProduct = () => {
       : false;
   };
   return (
-    <form
-      className='flex flex-col justify-center items-center gap-5'
-      onSubmit={handleSubmit}
-    >
+    <section className='w-full text-center'>
+      <h2 className='text-2xl font-semibold my-4'>제품 등록</h2>
       {file && (
         <img
-          className='w-42'
+          className='w-96 mx-auto mb-3'
           src={URL.createObjectURL(file)}
           alt={'제품 이미지'}
         />
       )}
-      <input
-        type='file'
-        accept='image/*'
-        name='img'
-        onChange={handleChange}
-        placeholder='제품 이미지'
-      />
-      <input
-        type='text'
-        name='name'
-        value={product.name}
-        onChange={handleChange}
-        placeholder='제품명'
-      />
-      <input
-        type='number'
-        name='price'
-        value={product.price == 0 ? '' : product.price}
-        onChange={handleChange}
-        placeholder='가격'
-      />
-      <input
-        type='text'
-        name='category'
-        value={product.category}
-        onChange={handleChange}
-        placeholder='카테고리'
-      />
-      <input
-        type='text'
-        name='description'
-        value={product.description}
-        onChange={handleChange}
-        placeholder='제품 설명'
-      />
-      <input
-        type='text'
-        name='size'
-        value={product.size}
-        onChange={handleChange}
-        placeholder='사이즈(콤마(,)로 구분)'
-      />
-      <button
-        className='w-96 h-12 bg-primary rounded disabled:bg-neutral-300 text-white'
-        disabled={!isValid()}
-      >
-        제품 등록하기
-      </button>
-    </form>
+      <form className='flex flex-col px-12 gap-5' onSubmit={handleSubmit}>
+        <input
+          type='file'
+          accept='image/*'
+          name='img'
+          onChange={handleChange}
+          placeholder='제품 이미지'
+        />
+        <input
+          type='text'
+          name='name'
+          value={product.name}
+          onChange={handleChange}
+          placeholder='제품명'
+        />
+        <input
+          type='number'
+          name='price'
+          value={product.price == 0 ? '' : product.price}
+          onChange={handleChange}
+          placeholder='가격'
+        />
+        <input
+          type='text'
+          name='category'
+          value={product.category}
+          onChange={handleChange}
+          placeholder='카테고리'
+        />
+        <input
+          type='text'
+          name='description'
+          value={product.description}
+          onChange={handleChange}
+          placeholder='제품 설명'
+        />
+        <input
+          type='text'
+          name='size'
+          value={product.size}
+          onChange={handleChange}
+          placeholder='사이즈(콤마(,)로 구분)'
+        />
+        <button
+          className='h-14 bg-primary rounded disabled:bg-neutral-300 text-2xl text-white'
+          disabled={!isValid()}
+        >
+          제품 등록하기
+        </button>
+      </form>
+    </section>
   );
 };
 
