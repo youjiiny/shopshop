@@ -1,6 +1,7 @@
 import { addProduct } from 'api/product';
 import { uploadImage } from 'api/uploader';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Product } from 'types/product';
 
 const NewProduct = () => {
@@ -12,6 +13,8 @@ const NewProduct = () => {
     size: '',
   });
   const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files, name, value } = e.target;
     if (files) {
@@ -22,8 +25,11 @@ const NewProduct = () => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsUploading(true);
     const imageUrl = (await uploadImage(file!)) as string;
-    addProduct(product, imageUrl);
+    await addProduct(product, imageUrl);
+    toast.success('제품이 추가되었습니다.');
+    setIsUploading(false);
   };
   const isValid = () => {
     return file &&
@@ -92,7 +98,7 @@ const NewProduct = () => {
           className='h-14 bg-primary rounded disabled:bg-neutral-300 text-2xl text-white'
           disabled={!isValid()}
         >
-          제품 등록하기
+          {isUploading ? '업로드 중...' : '제품 등록하기'}
         </button>
       </form>
     </section>
