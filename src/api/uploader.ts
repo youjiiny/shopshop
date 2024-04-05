@@ -11,6 +11,5 @@ export const uploadImage = async (file: File) => {
     import.meta.env.VITE_CLOUDINARY_URL,
     formData,
   );
-  console.log('res', data);
   return data.url;
 };
