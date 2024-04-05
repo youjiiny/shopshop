@@ -2,10 +2,10 @@ import { addProduct } from 'api/product';
 import { uploadImage } from 'api/uploader';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Product } from 'types/product';
+import { AddProductType } from 'types/product';
 
 const NewProduct = () => {
-  const [product, setProduct] = useState<Product>({
+  const [product, setProduct] = useState<AddProductType>({
     name: '',
     price: 0,
     category: '',

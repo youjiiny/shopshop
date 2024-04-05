@@ -1,9 +1,9 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
-import type { Product } from 'types/product';
+import type { GetProductType, AddProductType } from 'types/product';
 import { v4 as uuidv4 } from 'uuid';
 
-export const addProduct = async (product: Product, image: string) => {
+export const addProduct = async (product: AddProductType, image: string) => {
   const id = uuidv4();
   await setDoc(doc(db, 'products', id), {
     ...product,
@@ -12,4 +12,12 @@ export const addProduct = async (product: Product, image: string) => {
     size: product.size.split(','),
     image,
   });
+};
+
+export const getProducts = async () => {
+  const querySnapshot = await getDocs(collection(db, 'products'));
+  const products = querySnapshot.docs.map((doc) =>
+    doc.data(),
+  ) as GetProductType[];
+  return products;
 };

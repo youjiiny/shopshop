@@ -1,0 +1,31 @@
+import { useQuery } from '@tanstack/react-query';
+import { getProducts } from 'api/product';
+import ProductCard from './ProductCard';
+import { GetProductType } from 'types/product';
+
+const Products = () => {
+  const {
+    isLoading,
+    data: products,
+    error,
+  } = useQuery<GetProductType[]>({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
+
+  return (
+    <>
+      <ul>
+        {products &&
+          products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+      </ul>
+    </>
+  );
+};
+
+export default Products;
