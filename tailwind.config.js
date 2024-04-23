@@ -10,6 +10,9 @@ module.exports = {
         'lignt-brown': '#c3a995',
         price: '#432818',
       },
+      backgroundImage: {
+        banner: "url('/images/banner.jpg')",
+      },
     },
   },
   plugins: [],
