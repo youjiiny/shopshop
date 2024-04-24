@@ -8,6 +8,10 @@ module.exports = {
         google: '#3f85f4',
         github: '#333',
         'lignt-brown': '#c3a995',
+        price: '#432818',
+      },
+      backgroundImage: {
+        banner: "url('/images/banner.jpg')",
       },
     },
   },
