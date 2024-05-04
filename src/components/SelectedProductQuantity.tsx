@@ -4,7 +4,7 @@ import { IoCloseOutline } from 'react-icons/io5';
 import { ProductCountContextType } from 'types/product';
 
 export const SelectedProductQuantity = ({ option }: { option: string }) => {
-  const { selected, price, addCount, minusCount } =
+  const { selected, price, deleteSize, addCount, minusCount } =
     useProductCountContext() as ProductCountContextType;
 
   return (
@@ -32,7 +32,10 @@ export const SelectedProductQuantity = ({ option }: { option: string }) => {
       </div>
       <div className='w-36 flex justify-end items-center gap-2'>
         <p className='font-semibold'>{`${price.toLocaleString()}원`}</p>
-        <button className='w-4 h-4 border border-stone-300 text-neutral-600 rounded-full'>
+        <button
+          className='w-4 h-4 border border-stone-300 text-neutral-600 rounded-full'
+          onClick={() => deleteSize(option)}
+        >
           <IoCloseOutline />
         </button>
       </div>

@@ -74,7 +74,9 @@ const ProductDetail = () => {
           ))}
         </select>
         {selected && <SelectedProduct option={option} />}
-        <button className='h-14 bg-primary text-white'>장바구니 담기</button>
+        <button className='h-12 mt-4 bg-primary text-white'>
+          장바구니 담기
+        </button>
       </div>
     </div>
   );

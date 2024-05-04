@@ -27,7 +27,15 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
     if (selected?.size) return;
     setSelected((selected) => ({ ...selected, [size]: 1 }));
   };
-  console.log('selected', selected);
+  const deleteSize = (deleted: string) => {
+    setSize(size.filter((op) => op !== deleted));
+    const { [deleted]: _, ...selectedSize } = selected!;
+    if (JSON.stringify(selectedSize) === '{}') {
+      setSelected(null);
+      return;
+    }
+    setSelected(selectedSize);
+  };
   const addCount = (size: string) =>
     setSelected({ ...selected, [size]: selected![size] + 1 });
   const minusCount = (size: string) => {
@@ -52,6 +60,7 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
         setPrice,
         selectSize,
         selectProduct,
+        deleteSize,
         addCount,
         minusCount,
       }}
