@@ -16,19 +16,22 @@ const ProductDetail = () => {
     queryKey: ['products', id],
     queryFn: () => getProudctDetail(id as string),
   });
+  const {
+    size: option,
+    selected,
+    setPrice,
+    selectSize,
+    selectProduct,
+  } = (useProductCountContext()! as ProductCountContextType) || {};
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
 
   const { name, image, description, price, size } = product!;
-  const {
-    size: option,
-    selected,
-    selectSize,
-    selectProduct,
-  } = (useProductCountContext()! as ProductCountContextType) || {};
+
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
+    setPrice(price);
     selectSize(value);
     selectProduct(value);
   };
@@ -59,8 +62,8 @@ const ProductDetail = () => {
             </option>
           ))}
         </select>
-        <button className='h-10 bg-primary text-white'>장바구니 담기</button>
         {selected && <SelectedProduct option={option} />}
+        <button className='h-10 bg-primary text-white'>장바구니 담기</button>
       </div>
     </div>
   );
