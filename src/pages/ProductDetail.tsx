@@ -5,6 +5,7 @@ import { SelectedProduct } from 'components/SelectedProduct';
 import { useProductCountContext } from 'context/ProductCountContext';
 import { useParams } from 'react-router-dom';
 import { GetProductType, ProductCountContextType } from 'types/product';
+import { IoMdHeartEmpty } from 'react-icons/io';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -44,9 +45,19 @@ const ProductDetail = () => {
         alt={'상품 이미지'}
       />
       <div className='w-full basis-1/2 flex flex-col gap-2 pl-10'>
-        <h3 className='text-xl font-semibold'>{name}</h3>
-        <p>{`${price.toLocaleString()}원`}</p>
-        <div className='border-b-2'></div>
+        <div className='flex justify-between'>
+          <h3 className='text-xl font-semibold'>{name}</h3>
+          <button>
+            <IoMdHeartEmpty size={26} />
+          </button>
+        </div>
+        <div className='border-b-2 pb-2'>
+          <span className='text-xl font-semibold'>
+            {price.toLocaleString()}
+          </span>
+          <span className='font-bold'>원</span>
+        </div>
+
         <p>{description}</p>
         <select
           className='h-8 border border-gray-400 outline-none cursor-pointer'
@@ -63,7 +74,7 @@ const ProductDetail = () => {
           ))}
         </select>
         {selected && <SelectedProduct option={option} />}
-        <button className='h-10 bg-primary text-white'>장바구니 담기</button>
+        <button className='h-14 bg-primary text-white'>장바구니 담기</button>
       </div>
     </div>
   );
