@@ -26,7 +26,7 @@ code {
 }
 
 input {
-  @apply p-4 outline-none border border-gray-300;
+  @apply outline-none border border-gray-300;
 }
 
 /* Chrome, Safari, Edge, Opera */
