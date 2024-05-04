@@ -1,4 +1,11 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { useParams } from 'react-router-dom';
 import { ProductCountContextType, ProductSize } from 'types/product';
 
 export const ProductCountContext =
@@ -7,6 +14,7 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
   const [size, setSize] = useState<string[]>([]);
   const [selected, setSelected] = useState<ProductSize | null>(null);
   const [price, setPrice] = useState<number>(0);
+  const { id } = useParams();
 
   const selectSize = (selected: string) => {
     if (size.includes(selected)) {
@@ -26,6 +34,14 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
     if (selected![size] <= 1) return;
     setSelected({ ...selected, [size]: selected![size] - 1 });
   };
+
+  useEffect(() => {
+    if (id) {
+      setSize([]);
+      setSelected(null);
+      setPrice(0);
+    }
+  }, [id]);
 
   return (
     <ProductCountContext.Provider
