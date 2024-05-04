@@ -26,6 +26,7 @@ export type ProductCountContextType = {
   price: number;
   setPrice: (price: number) => void;
   selectSize: (size: string) => void;
+  deleteSize: (size: string) => void;
   selectProduct: (size: string) => void;
   addCount: (size: string) => void;
   minusCount: (size: string) => void;
