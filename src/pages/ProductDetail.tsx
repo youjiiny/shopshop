@@ -6,6 +6,8 @@ import { useProductCountContext } from 'context/ProductCountContext';
 import { useParams } from 'react-router-dom';
 import { GetProductType, ProductCountContextType } from 'types/product';
 import { IoMdHeartEmpty } from 'react-icons/io';
+import { addCart } from 'api/cart';
+import { useAuthContext } from 'context/AuthContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,6 +19,7 @@ const ProductDetail = () => {
     queryKey: ['products', id],
     queryFn: () => getProudctDetail(id as string),
   });
+  const user = useAuthContext();
   const {
     size: option,
     selected,
@@ -35,6 +38,11 @@ const ProductDetail = () => {
     setPrice(price);
     selectSize(value);
     selectProduct(value);
+  };
+  const handleAdd = () => {
+    if (!selected) return;
+    const addProduct = { id, name, image, price } as GetProductType;
+    addCart(user!.uid, addProduct, selected);
   };
 
   return (
@@ -74,7 +82,7 @@ const ProductDetail = () => {
           ))}
         </select>
         {selected && <SelectedProduct option={option} />}
-        <button className='h-12 mt-4 bg-primary text-white'>
+        <button className='h-12 mt-4 bg-primary text-white' onClick={handleAdd}>
           장바구니 담기
         </button>
       </div>

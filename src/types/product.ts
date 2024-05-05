@@ -31,3 +31,10 @@ export type ProductCountContextType = {
   addCount: (size: string) => void;
   minusCount: (size: string) => void;
 };
+
+export type AddCartProductType = {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+};
