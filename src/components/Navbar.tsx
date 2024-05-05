@@ -3,6 +3,7 @@ import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
 import User from './User';
 import { useAuthContext } from 'context/AuthContext';
 import { logout } from 'api/auth';
+import CartStatus from './CartStatus';
 
 const Navbar = () => {
   const user = useAuthContext();
@@ -14,7 +15,9 @@ const Navbar = () => {
       </Link>
       <nav className='flex items-center gap-4'>
         <Link to='/products'>Products</Link>
-        <Link to='/carts'>Carts</Link>
+        <Link to='/carts'>
+          <CartStatus />
+        </Link>
         <Link to='products/new'>
           <FaPencilAlt />
         </Link>
