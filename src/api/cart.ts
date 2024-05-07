@@ -9,11 +9,15 @@ export const getMyCart = async (userId: string) => {
   return products;
 };
 
-export const addCart = async (
-  userId: string,
-  product: AddCartProductType,
-  option: ProductSize,
-) => {
+export const addCart = async ({
+  userId,
+  product,
+  option,
+}: {
+  userId: string;
+  product: AddCartProductType;
+  option: ProductSize;
+}) => {
   Object.entries(option).forEach(async ([op, quantity]) => {
     const addProduct = { ...product, size: op, quantity };
     const docRef = doc(collection(db, 'carts', userId, 'products'));

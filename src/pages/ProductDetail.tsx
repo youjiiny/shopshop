@@ -1,10 +1,14 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProudctDetail } from 'api/product';
 import { SelectedProduct } from 'components/SelectedProduct';
 import { useProductCountContext } from 'context/ProductCountContext';
 import { useParams } from 'react-router-dom';
-import { GetProductType, ProductCountContextType } from 'types/product';
+import {
+  AddCartProductType,
+  GetProductType,
+  ProductCountContextType,
+} from 'types/product';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { addCart } from 'api/cart';
 import { useAuthContext } from 'context/AuthContext';
@@ -20,13 +24,21 @@ const ProductDetail = () => {
     queryFn: () => getProudctDetail(id as string),
   });
   const user = useAuthContext();
+  const queryClient = useQueryClient();
   const {
     size: option,
     selected,
     setPrice,
     selectSize,
     selectProduct,
-  } = (useProductCountContext()! as ProductCountContextType) || {};
+  } = useProductCountContext()! as ProductCountContextType;
+
+  const addToCartMutation = useMutation({
+    mutationFn: addCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myCart', user?.uid] });
+    },
+  });
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
@@ -39,10 +51,15 @@ const ProductDetail = () => {
     selectSize(value);
     selectProduct(value);
   };
+
   const handleAdd = () => {
     if (!selected) return;
-    const addProduct = { id, name, image, price } as GetProductType;
-    addCart(user!.uid, addProduct, selected);
+    const addProduct = { id, name, image, price } as AddCartProductType;
+    addToCartMutation.mutate({
+      userId: user!.uid,
+      product: addProduct,
+      option: selected,
+    });
   };
 
   return (
