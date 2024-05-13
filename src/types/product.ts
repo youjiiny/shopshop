@@ -38,3 +38,12 @@ export type AddCartProductType = {
   image: string;
   price: number;
 };
+
+export type CartItemType = {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  size: string;
+  quantity: number;
+};
