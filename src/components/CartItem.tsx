@@ -1,7 +1,7 @@
 import { CartItemType } from 'types/product';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { IoCloseOutline } from 'react-icons/io5';
-import { updateCart } from 'api/cart';
+import { deleteFromCart, updateCart } from 'api/cart';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = { uid: string; product: CartItemType };
@@ -18,10 +18,18 @@ const CartItem = ({ uid, product }: Props) => {
     const updated = { ...product, quantity: quantity + 1 };
     updateToCartMutation.mutate({ uid, updated });
   };
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    deleteFromCartMutation.mutate({ uid, product });
+  };
 
   const updateToCartMutation = useMutation({
     mutationFn: updateCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myCart', uid] });
+    },
+  });
+  const deleteFromCartMutation = useMutation({
+    mutationFn: deleteFromCart,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myCart', uid] });
     },

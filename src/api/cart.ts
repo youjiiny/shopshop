@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -52,5 +53,25 @@ export const updateCart = async ({
   querySnapshot.forEach(async (docSnap) => {
     const docRef = doc(db, 'carts', uid, 'products', docSnap.id);
     await setDoc(docRef, updated);
+  });
+};
+
+export const deleteFromCart = async ({
+  uid,
+  product,
+}: {
+  uid: string;
+  product: CartItemType;
+}) => {
+  const docRef = collection(db, 'carts', uid, 'products');
+  const q = query(
+    docRef,
+    where('id', '==', product.id),
+    where('size', '==', product.size),
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(async (docSnap) => {
+    const docRef = doc(db, 'carts', uid, 'products', docSnap.id);
+    await deleteDoc(docRef);
   });
 };
