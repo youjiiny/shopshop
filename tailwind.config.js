@@ -8,7 +8,7 @@ module.exports = {
         google: '#3f85f4',
         github: '#333',
         price: '#432818',
-        'lignt-brown': '#c3a995',
+        'light-brown': '#c3a995',
         'price-stress': '#ff4800',
       },
       width: {
