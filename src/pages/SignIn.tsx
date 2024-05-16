@@ -49,14 +49,14 @@ const SignIn = () => {
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex flex-col gap-4 mb-11'>
         <button
-          className='w-96 h-10 flex justify-center items-center gap-2 bg-google text-white rounded'
+          className='w-96 h-12 flex justify-center items-center gap-2 bg-google text-white rounded'
           onClick={handleLoginGoogle}
         >
           <FaGoogle />
           구글로 로그인
         </button>
         <button
-          className='w-96 h-10 flex justify-center items-center gap-2 bg-github text-white rounded'
+          className='w-96 h-12 flex justify-center items-center gap-2 bg-github text-white rounded'
           onClick={handleLoginGithub}
         >
           <FaGithub />
@@ -75,7 +75,7 @@ const SignIn = () => {
         <div className='flex flex-col gap-2'>
           <label htmlFor='id'>아이디</label>
           <input
-            className='w-96 h-10 p-2 border border-neutral-400 rounded'
+            className='w-96 h-12 p-2 border border-neutral-400 rounded'
             type='text'
             id='id'
             placeholder='예)email@gmail.com'
@@ -85,14 +85,14 @@ const SignIn = () => {
         <div className='flex flex-col gap-2'>
           <label htmlFor='password'>비밀번호</label>
           <input
-            className='w-96 h-10 p-2 border border-neutral-400 rounded'
+            className='w-96 h-12 p-2 border border-neutral-400 rounded'
             type='password'
             id='password'
             placeholder='비밀번호를 입력해주세요.'
             onChange={handleChange}
           />
         </div>
-        <button className='w-96 h-10 bg-lignt-brown rounded'>
+        <button className='w-96 h-12 bg-light-brown rounded'>
           업체 회원 로그인
         </button>
       </form>

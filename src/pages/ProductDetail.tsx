@@ -36,7 +36,7 @@ const ProductDetail = () => {
   const addToCartMutation = useMutation({
     mutationFn: addCart,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myCart', user?.uid] });
+      queryClient.invalidateQueries({ queryKey: ['myCart', user!.uid] });
     },
   });
 
@@ -56,7 +56,7 @@ const ProductDetail = () => {
     if (!selected) return;
     const addProduct = { id, name, image, price } as AddCartProductType;
     addToCartMutation.mutate({
-      userId: user!.uid,
+      uid: user!.uid,
       product: addProduct,
       option: selected,
     });
