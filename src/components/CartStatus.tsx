@@ -7,7 +7,7 @@ const CartStatus = () => {
   const user = useAuthContext();
   const { data: products } = useQuery({
     queryKey: ['myCart', user?.uid],
-    queryFn: () => getMyCart(user!.uid),
+    queryFn: () => getMyCart(user?.uid as string),
   });
 
   return (
