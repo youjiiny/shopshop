@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
 import User from './User';
 import { useAuthContext } from 'context/AuthContext';
@@ -7,6 +7,10 @@ import CartStatus from './CartStatus';
 
 const Navbar = () => {
   const user = useAuthContext();
+  const { pathname } = useLocation();
+  if (pathname === '/signin' || pathname === '/signup') {
+    return null;
+  }
   return (
     <header className='flex justify-between p-2'>
       <Link to='/' className='flex text-3xl text-primary'>
