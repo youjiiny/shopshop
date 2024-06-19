@@ -6,12 +6,16 @@ import { useProductCountContext } from 'context/ProductCountContext';
 import { useParams } from 'react-router-dom';
 import {
   AddCartProductType,
+  CartItemType,
   GetProductType,
   ProductCountContextType,
 } from 'types/product';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { addCart } from 'api/cart';
 import { useAuthContext } from 'context/AuthContext';
+import { useModalStore } from 'store/modal';
+import Modal from 'components/Modal';
+import AddToCartModal from 'components/AddToCartModal';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -25,6 +29,7 @@ const ProductDetail = () => {
   });
   const user = useAuthContext();
   const queryClient = useQueryClient();
+  const { isOpen, toggleModal } = useModalStore();
   const {
     size: option,
     selected,
@@ -54,7 +59,20 @@ const ProductDetail = () => {
 
   const handleAdd = () => {
     if (!selected) return;
+    toggleModal();
+    const products: CartItemType[] | undefined = queryClient.getQueryData([
+      'myCart',
+      user?.uid as string,
+    ]);
     const addProduct = { id, name, image, price } as AddCartProductType;
+    if (products) {
+      // 장바구니에 담긴 상품 중 같은 상품명, 같은 사이즈이면 return;
+      const same = products.find(
+        (product) =>
+          product.id === id && product.size === Object.keys(selected)[0],
+      );
+      if (same) return;
+    }
     addToCartMutation.mutate({
       uid: user!.uid,
       product: addProduct,
@@ -64,6 +82,11 @@ const ProductDetail = () => {
 
   return (
     <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
+      {isOpen && (
+        <Modal>
+          <AddToCartModal />
+        </Modal>
+      )}
       <img
         className='w-full basis-1/2 md:w-140 md:h-140'
         src={image}

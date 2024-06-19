@@ -8,8 +8,6 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import { PriceCard } from 'components/PriceCard';
 
-const SHIPPING = 3000;
-
 const MyCart = () => {
   const user = useAuthContext();
   const { isLoading, data: products } = useQuery<CartItemType[]>({
@@ -22,6 +20,7 @@ const MyCart = () => {
     (acc, cur) => (acc += cur.price * cur.quantity),
     0,
   );
+  const SHIPPING = totalPrice! < 70000 ? 3000 : 0;
 
   return (
     <div className='px-12 pt-12 pb-48'>
