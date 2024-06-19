@@ -20,6 +20,9 @@ module.exports = {
       backgroundImage: {
         banner: "url('/images/banner.jpg')",
       },
+      boxShadow: {
+        modal: 'rgba(0, 0, 0, 0.5) 20px 20px 80px 0px',
+      },
     },
   },
   plugins: [],
