@@ -35,9 +35,9 @@ const MyCart = () => {
       </section>
       <section className='flex justify-around items-center my-20 border-t-2 border-black'>
         <PriceCard text={'총 주문금액'} price={totalPrice!} />
-        <BsFillPlusCircleFill size={20} />
+        <BsFillPlusCircleFill size={25} />
         <PriceCard text={'배송비'} price={SHIPPING} />
-        <FaEquals size={20} />
+        <FaEquals size={25} />
         <PriceCard text={'총 결제금액'} price={totalPrice! + SHIPPING} />
       </section>
       <button className='w-full h-12 text-white text-xl hover:text-orange-700 font-semibold bg-light-brown rounded'>
