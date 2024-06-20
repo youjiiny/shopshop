@@ -44,28 +44,28 @@ const CartItem = ({ uid, product }: Props) => {
       <div className='flex-1 flex  justify-between'>
         <div className='basis-2/5'>
           <div className='flex justify-between items-center'>
-            <p className='text-lg'>{name}</p>
+            <p className='font-semibold md:text-lg'>{name}</p>
             <button
-              className='w-5 h-5 border border-zinc-300 text-zinc-300 text-center'
+              className='w-6 h-6 border border-zinc-300 text-zinc-300 text-center'
               onClick={handleDelete}
             >
-              <IoCloseOutline size={18} />
+              <IoCloseOutline size={24} />
             </button>
           </div>
-          <p>옵션:{size}</p>
+          <p className='text-sm text-light-black'>옵션:{size}</p>
         </div>
 
         <div className='flex items-center gap-1 basis-2/5 text-xl md:text-2xl'>
-          <button onClick={handleMinus}>
+          <button className='text-slate-400' onClick={handleMinus}>
             <FiMinusSquare />
           </button>
-          <span>{quantity}</span>
-          <button onClick={handlePlus}>
+          <span className='text-lg'>{quantity}</span>
+          <button className='text-slate-400' onClick={handlePlus}>
             <FiPlusSquare />
           </button>
         </div>
       </div>
-      <div className='basis-1/5 text-center text-xl md:text-2xl font-semibold text-price'>
+      <div className='basis-1/5 text-center text-lg md:text-xl font-semibold text-price'>
         <p>{`${(price * quantity).toLocaleString()}원`}</p>
       </div>
     </li>

@@ -10,6 +10,7 @@ module.exports = {
         price: '#432818',
         'light-brown': '#c3a995',
         'price-stress': '#ff4800',
+        'light-black': 'rgb(48, 48, 51)',
       },
       width: {
         140: '35rem',
