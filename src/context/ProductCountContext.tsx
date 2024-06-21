@@ -16,16 +16,12 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
   const [price, setPrice] = useState<number>(0);
   const { id } = useParams();
 
-  const selectSize = (selected: string) => {
-    if (size.includes(selected)) {
-      alert('이미 선택된 옵션입니다');
+  const selectProduct = (option: string) => {
+    if (size.includes(option)) {
       return;
     }
-    setSize((size) => [...size, selected]);
-  };
-  const selectProduct = (size: string) => {
-    if (selected?.size) return;
-    setSelected((selected) => ({ ...selected, [size]: 1 }));
+    setSize((size) => [...size, option]);
+    setSelected((selected) => ({ ...selected, [option]: 1 }));
   };
   const deleteSize = (deleted: string) => {
     setSize(size.filter((op) => op !== deleted));
@@ -58,7 +54,6 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
         selected,
         price,
         setPrice,
-        selectSize,
         selectProduct,
         deleteSize,
         addCount,
