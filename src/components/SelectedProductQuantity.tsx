@@ -8,7 +8,7 @@ export const SelectedProductQuantity = ({ option }: { option: string }) => {
     useProductCountContext() as ProductCountContextType;
 
   return (
-    <li className='flex items-center gap-6 py-3 border-b-2'>
+    <li className='flex items-center gap-6 py-3 border-b-2 last:border-black'>
       <p className='font-medium grow'>{option}</p>
       <div className='flex items-center'>
         <button
@@ -33,10 +33,10 @@ export const SelectedProductQuantity = ({ option }: { option: string }) => {
       <div className='w-36 flex justify-end items-center gap-2'>
         <p className='font-semibold'>{`${price.toLocaleString()}원`}</p>
         <button
-          className='w-4 h-4 border border-stone-300 text-neutral-600 rounded-full'
+          className='w-4 h-4 flex items-center justify-center border border-stone-300 text-neutral-600 rounded-full'
           onClick={() => deleteSize(option)}
         >
-          <IoCloseOutline />
+          <IoCloseOutline size={12} />
         </button>
       </div>
     </li>

@@ -128,6 +128,7 @@ const ProductDetail = () => {
           className='h-8 border border-gray-400 outline-none cursor-pointer'
           onChange={handleSelect}
           defaultValue={''}
+          value={''}
         >
           <option disabled value={''}>
             [사이즈]를 선택하세요.
@@ -139,7 +140,10 @@ const ProductDetail = () => {
           ))}
         </select>
         {selected && <SelectedProduct option={option} />}
-        <button className='h-12 mt-4 bg-primary text-white' onClick={handleAdd}>
+        <button
+          className='h-12 mt-4 bg-primary text-white hover:bg-price-stress shadow-md'
+          onClick={handleAdd}
+        >
           장바구니 담기
         </button>
       </div>
