@@ -25,9 +25,8 @@ export type ProductCountContextType = {
   selected: ProductSize | null;
   price: number;
   setPrice: (price: number) => void;
-  selectSize: (size: string) => void;
   deleteSize: (size: string) => void;
-  selectProduct: (size: string) => void;
+  selectProduct: (option: string) => void;
   addCount: (size: string) => void;
   minusCount: (size: string) => void;
 };
