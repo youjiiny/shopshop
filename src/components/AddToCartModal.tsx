@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { useModalStore } from 'store/modal';
 
 const AddToCartModal = () => {
-  const { isOpen, toggleModal } = useModalStore();
+  const { toggleModal } = useModalStore();
   const handleClick = () => {
-    toggleModal(); //모달 창 닫기
+    toggleModal();
   };
   return (
     <div className='flex flex-col gap-5 text-lg text-center leading-6'>

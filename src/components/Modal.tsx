@@ -1,9 +1,10 @@
 import ModalCloseSvg from 'assets/svg/ModalCloseSvg';
+import { ProductCountProvider } from 'context/ProductCountContext';
 import { createPortal } from 'react-dom';
 import { useModalStore } from 'store/modal';
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
-  const { isOpen, toggleModal } = useModalStore();
+  const { isOpen } = useModalStore();
   if (!isOpen) return null;
 
   return createPortal(

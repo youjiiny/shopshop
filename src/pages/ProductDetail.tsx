@@ -29,7 +29,7 @@ const ProductDetail = () => {
   });
   const user = useAuthContext();
   const queryClient = useQueryClient();
-  const { isOpen, mode, toggleModal } = useModalStore();
+  const { isOpen, mode, setMode, toggleModal } = useModalStore();
   const {
     size: option,
     selected,
@@ -57,14 +57,17 @@ const ProductDetail = () => {
 
   const handleAdd = () => {
     if (!selected) return;
+    if (mode !== 'add cart') {
+      setMode('add cart');
+    }
     toggleModal();
     const products: CartItemType[] | undefined = queryClient.getQueryData([
       'myCart',
       user?.uid as string,
     ]);
     const addProduct = { id, name, image, price } as AddCartProductType;
+    // 장바구니에 담긴 상품이 있으면
     if (products) {
-      // 장바구니에 담긴 상품이 있으면
       // 선택한 상품들 중 장바구니에 담지 않은 상품들로 필터링
       const selectedArr = Object.entries(selected);
       const options = selectedArr.filter((option) => {
@@ -127,7 +130,7 @@ const ProductDetail = () => {
         <select
           className='h-8 border border-gray-400 outline-none cursor-pointer'
           onChange={handleSelect}
-          defaultValue={''}
+          //defaultValue={''}
           value={''}
         >
           <option disabled value={''}>

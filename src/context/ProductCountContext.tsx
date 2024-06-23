@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
+import { useModalStore } from 'store/modal';
 import { ProductCountContextType, ProductSize } from 'types/product';
 
 export const ProductCountContext =
@@ -15,9 +16,12 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
   const [selected, setSelected] = useState<ProductSize | null>(null);
   const [price, setPrice] = useState<number>(0);
   const { id } = useParams();
+  const { setMode, toggleModal } = useModalStore();
 
   const selectProduct = (option: string) => {
     if (size.includes(option)) {
+      setMode('duplicate option');
+      toggleModal();
       return;
     }
     setSize((size) => [...size, option]);
