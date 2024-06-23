@@ -1,5 +1,3 @@
-import ModalCloseSvg from 'assets/svg/ModalCloseSvg';
-import { ProductCountProvider } from 'context/ProductCountContext';
 import { createPortal } from 'react-dom';
 import { useModalStore } from 'store/modal';
 

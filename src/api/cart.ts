@@ -9,8 +9,13 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { AddCartProductType, CartItemType, ProductSize } from 'types/product';
+import { QueryFunction } from '@tanstack/react-query';
 
-export const getMyCart = async (userId: string): Promise<CartItemType[]> => {
+export const getMyCart: QueryFunction<
+  CartItemType[],
+  [string, string]
+> = async ({ queryKey }) => {
+  const [_, userId] = queryKey;
   const q = query(collection(db, `carts/${userId}/products`));
   const querySnapshot = await getDocs(q);
   const products = querySnapshot.docs.map((doc) =>
