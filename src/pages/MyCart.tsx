@@ -1,19 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
 import { v4 as uuidv4 } from 'uuid';
-import { getMyCart } from 'api/cart';
 import CartItem from 'components/CartItem';
 import { useAuthContext } from 'context/AuthContext';
-import type { CartItemType } from 'types/product';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import { PriceCard } from 'components/PriceCard';
+import { useCartQuery } from 'hooks/useCartQuery';
 
 const MyCart = () => {
   const user = useAuthContext();
-  const { isLoading, data: products } = useQuery<CartItemType[]>({
-    queryKey: ['myCart', user?.uid],
-    queryFn: () => getMyCart(user!.uid),
-  });
+  const { isLoading, products } = useCartQuery();
 
   if (isLoading) return <p>Loading...</p>;
   const totalPrice = products?.reduce(
@@ -29,7 +24,11 @@ const MyCart = () => {
         {!products?.length && <p>장바구니에 상품이 없습니다.</p>}
         <ul>
           {products?.map((product) => (
-            <CartItem key={uuidv4()} product={product} uid={user!.uid} />
+            <CartItem
+              key={uuidv4()}
+              product={product}
+              uid={user?.uid as string}
+            />
           ))}
         </ul>
       </section>

@@ -1,39 +1,26 @@
 import { CartItemType } from 'types/product';
 import { FiMinusSquare, FiPlusSquare } from 'react-icons/fi';
-import { deleteFromCart, updateCart } from 'api/cart';
 import { IoCloseOutline } from 'react-icons/io5';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCartQuery } from 'hooks/useCartQuery';
 
 type Props = { uid: string; product: CartItemType };
 
 const CartItem = ({ uid, product }: Props) => {
-  const queryClient = useQueryClient();
   const { id, name, image, price, size, quantity } = product;
+  const { updateToCartMutate, deleteFromCartMutate } = useCartQuery();
   const handleMinus = () => {
     if (quantity <= 1) return;
     const updated = { ...product, quantity: quantity - 1 };
-    updateToCartMutation.mutate({ uid, updated });
+    updateToCartMutate({ uid, updated });
   };
   const handlePlus = () => {
     const updated = { ...product, quantity: quantity + 1 };
-    updateToCartMutation.mutate({ uid, updated });
+    updateToCartMutate({ uid, updated });
   };
   const handleDelete = () => {
-    deleteFromCartMutation.mutate({ uid, product });
+    deleteFromCartMutate({ uid, product });
   };
 
-  const updateToCartMutation = useMutation({
-    mutationFn: updateCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myCart', uid] });
-    },
-  });
-  const deleteFromCartMutation = useMutation({
-    mutationFn: deleteFromCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myCart', uid] });
-    },
-  });
   return (
     <li className='flex justify-between items-center p-4 border-b-2'>
       <img
