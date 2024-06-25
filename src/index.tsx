@@ -13,6 +13,7 @@ import NotFound from 'pages/NotFound';
 import SignIn from 'pages/SignIn';
 import SignUp from 'pages/SignUp';
 import ProtectedRoute from 'pages/ProtectedRoute';
+import CheckOut from 'pages/CheckOut';
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requireUser={false}>
             <SignUp />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/checkout',
+        element: (
+          <ProtectedRoute requireUser>
+            <CheckOut />
           </ProtectedRoute>
         ),
       },
