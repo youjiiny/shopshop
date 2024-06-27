@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FaPencilAlt, FaSlackHash } from 'react-icons/fa';
+import { FaPencilAlt, FaSlackHash, FaUser } from 'react-icons/fa';
 import User from './User';
 import { useAuthContext } from 'context/AuthContext';
 import { logout } from 'api/auth';
@@ -22,11 +22,17 @@ const Navbar = () => {
         <Link to='/carts'>
           <CartStatus />
         </Link>
-        <Link to='products/new'>
-          <FaPencilAlt />
-        </Link>
+        {user?.isAdmin && (
+          <Link to='products/new'>
+            <FaPencilAlt />
+          </Link>
+        )}
         {!user && <Link to='/signin'>Login</Link>}
-        {user && <User user={user!} />}
+        {user && (
+          <Link to='/mypage'>
+            <FaUser />
+          </Link>
+        )}
         {user && <button onClick={logout}>Logout</button>}
       </nav>
     </header>
