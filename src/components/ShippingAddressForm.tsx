@@ -21,7 +21,9 @@ const ShippingAddressForm = () => {
   >({
     queryKey: ['users', user?.uid as string, 'address'],
     queryFn: getShippingAddress,
+    enabled: !user?.isAdmin,
   });
+
   const queryClient = useQueryClient();
   const [zoneCode, setZoneCode] = useState<string>('');
   const [roadAddress, setRoadAddress] = useState<string>('');
@@ -61,9 +63,10 @@ const ShippingAddressForm = () => {
 
   return (
     <div className='max-w-96'>
-      <div className='w-full flex items-center'>
+      <div className='text-sm text-[#303033]'>주소 정보</div>
+      <div className='w-full flex items-center mt-2'>
         <input
-          className='flex-1 h-10  px-3'
+          className='flex-1 h-10 px-3 font-semibold'
           type='text'
           placeholder='주소'
           value={zoneCode}
