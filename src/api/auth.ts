@@ -92,7 +92,7 @@ export const logout = async () => {
 };
 
 export const getShippingAddress: QueryFunction<
-  Address | undefined,
+  Address,
   [string, string, string]
 > = async ({ queryKey }) => {
   const [_, uid] = queryKey;
@@ -102,6 +102,7 @@ export const getShippingAddress: QueryFunction<
     const address = userSnap.data() as Address;
     return address;
   }
+  throw new Error('Address not found');
 };
 
 export const addShippingAddress = async ({

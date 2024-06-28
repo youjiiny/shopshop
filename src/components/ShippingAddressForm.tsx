@@ -14,9 +14,9 @@ import { Address } from 'types/auth';
 const ShippingAddressForm = () => {
   const user = useAuthContext();
   const { data: address, error } = useQuery<
-    Address | undefined,
+    Address,
     DefaultError,
-    Address | undefined,
+    Address,
     [string, string, string]
   >({
     queryKey: ['users', user?.uid as string, 'address'],
@@ -56,6 +56,8 @@ const ShippingAddressForm = () => {
       setDetailAddress(address.detailAddress || '');
     }
   }, [address]);
+
+  if (user?.isAdmin) return null;
 
   return (
     <div className='max-w-96'>
