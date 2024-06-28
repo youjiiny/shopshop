@@ -7,10 +7,20 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  User,
 } from 'firebase/auth';
 import { auth, db } from '../api/firebase';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
+import { Address } from 'types/auth';
+import { QueryFunction } from '@tanstack/react-query';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -79,4 +89,29 @@ const checkAdminUser = async (user: FirebaseUser) => {
 
 export const logout = async () => {
   return await signOut(auth);
+};
+
+export const getShippingAddress: QueryFunction<
+  Address,
+  [string, string, string]
+> = async ({ queryKey }) => {
+  const [_, uid] = queryKey;
+  const userRef = doc(db, 'users', uid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists()) {
+    const address = userSnap.data() as Address;
+    return address;
+  }
+  throw new Error('Address not found');
+};
+
+export const addShippingAddress = async ({
+  uid,
+  address,
+}: {
+  uid: string;
+  address: Address;
+}) => {
+  const userRef = doc(db, 'users', uid);
+  await setDoc(userRef, address);
 };
