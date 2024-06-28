@@ -15,8 +15,8 @@ import SignUp from 'pages/SignUp';
 import ProtectedRoute from 'pages/ProtectedRoute';
 import CheckOut from 'pages/CheckOut';
 import MyPage from 'pages/MyPage';
-import MyPageEditForm from 'components/MyPageEditForm';
 import MyPageLayout from 'pages/MyPageLayout';
+import MyPageSetting from 'pages/MyPageSetting';
 
 const router = createBrowserRouter([
   {
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'edit/info',
-            element: <MyPageEditForm />,
+            element: <MyPageSetting />,
           },
         ],
       },
