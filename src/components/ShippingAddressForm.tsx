@@ -1,46 +1,21 @@
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { useEffect, useState } from 'react';
-import { postcodeScriptUrl } from 'react-daum-postcode/lib/loadPostcode';
-import { addShippingAddress, getShippingAddress } from 'api/auth';
-import { useAuthContext } from 'context/AuthContext';
 import {
-  DefaultError,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { Address } from 'types/auth';
+  Address,
+  postcodeScriptUrl,
+} from 'react-daum-postcode/lib/loadPostcode';
+import { useAuthContext } from 'context/AuthContext';
+import { useShippingQuery } from 'hooks/useShippingQuery';
 
 const ShippingAddressForm = () => {
   const user = useAuthContext();
-  const { data: address, error } = useQuery<
-    Address,
-    DefaultError,
-    Address,
-    [string, string, string]
-  >({
-    queryKey: ['users', user?.uid as string, 'address'],
-    queryFn: getShippingAddress,
-    enabled: !user?.isAdmin,
-  });
-
-  const queryClient = useQueryClient();
+  const { address, saveAddressMutate } = useShippingQuery();
   const [zoneCode, setZoneCode] = useState<string>('');
   const [roadAddress, setRoadAddress] = useState<string>('');
   const [detailAddress, setDetailAddress] = useState<string>('');
   const open = useDaumPostcodePopup(postcodeScriptUrl);
 
-  const saveAddressMutation = useMutation({
-    mutationFn: addShippingAddress,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['users', user?.uid as string, 'address'],
-      });
-    },
-  });
-
-  const handleComplete = (data: any) => {
-    console.log('data', data);
+  const handleComplete = (data: Address) => {
     setZoneCode(data.zonecode);
     setRoadAddress(data.roadAddress);
   };
@@ -48,7 +23,7 @@ const ShippingAddressForm = () => {
   const handleSave = () => {
     if (!zoneCode || !roadAddress || !detailAddress) return;
     const address = { zoneCode, roadAddress, detailAddress };
-    saveAddressMutation.mutate({ uid: user?.uid as string, address });
+    saveAddressMutate({ uid: user?.uid as string, address });
   };
 
   useEffect(() => {
