@@ -1,4 +1,9 @@
+import { TabContextType, useTabContext } from 'context/TabContext';
+import ShippingTabDecider from './ShippingTabDecider';
+
 const ShippingInfo = () => {
+  const { tab, setTab } = useTabContext() as TabContextType;
+
   return (
     <section>
       <header className='flex items-center justify-between border-black border-t-2 '>
@@ -17,19 +22,20 @@ const ShippingInfo = () => {
         <ul className='flex w-full border-b'>
           <li
             role='button'
-            className='w-40 h-14 flex items-center justify-center text-sm cursor:pointer border'
+            className={`w-40 h-14 flex items-center justify-center text-sm cursor:pointer border ${tab === 'origin' ? 'bg-white' : 'bg-gray-100 text-slate-400'}`}
+            onClick={() => setTab('origin')}
           >
             기존 배송지
           </li>
-          <li className='w-40 h-14 flex items-center justify-center text-sm cursor:pointer border'>
+          <li
+            className={`w-40 h-14 flex items-center justify-center text-sm cursor:pointer border ${tab === 'new' ? 'bg-white' : 'bg-gray-100 text-slate-400'}`}
+            onClick={() => setTab('new')}
+          >
             신규입력
           </li>
         </ul>
       </div>
-      <p className='text-center text-sm text-[#A8A8A8] pt-24 pb-32'>
-        등록된 배송지가 없습니다. <br />
-        배송지를 신규입력 해주세요.
-      </p>
+      <ShippingTabDecider />
     </section>
   );
 };
