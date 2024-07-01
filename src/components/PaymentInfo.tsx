@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { CartItemType } from 'types/product';
-import ShippingInfo from './ShippingInfo';
+import { AuthContextType } from 'types/auth';
 
 const PaymentInfo = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const queryClient = useQueryClient();
   const products: CartItemType[] | undefined = queryClient.getQueryData([
     'myCart',

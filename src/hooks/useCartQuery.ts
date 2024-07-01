@@ -6,10 +6,11 @@ import {
 } from '@tanstack/react-query';
 import { addCart, deleteFromCart, getMyCart, updateCart } from 'api/cart';
 import { useAuthContext } from 'context/AuthContext';
+import { AuthContextType } from 'types/auth';
 import { CartItemType } from 'types/product';
 
 export const useCartQuery = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const queryClient = useQueryClient();
   const {
     isLoading,

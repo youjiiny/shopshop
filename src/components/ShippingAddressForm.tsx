@@ -6,9 +6,10 @@ import {
 } from 'react-daum-postcode/lib/loadPostcode';
 import { useAuthContext } from 'context/AuthContext';
 import { useShippingQuery } from 'hooks/useShippingQuery';
+import { AuthContextType } from 'types/auth';
 
 const ShippingAddressForm = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const { address, saveAddressMutate } = useShippingQuery();
   const [zoneCode, setZoneCode] = useState<string>('');
   const [roadAddress, setRoadAddress] = useState<string>('');

@@ -1,8 +1,10 @@
 import { useAuthContext } from 'context/AuthContext';
 import { Link } from 'react-router-dom';
+import { AuthContextType } from 'types/auth';
 
 const SideBar = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
+
   return (
     <div className='w-56 h-60'>
       <div className='mb-10'>

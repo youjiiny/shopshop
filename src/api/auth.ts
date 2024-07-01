@@ -7,6 +7,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../api/firebase';
 import {
@@ -114,4 +115,8 @@ export const addShippingAddress = async ({
 }) => {
   const userRef = doc(db, 'users', uid);
   await setDoc(userRef, address);
+};
+
+export const updateUserName = async (updated: { displayName: string }) => {
+  await updateProfile(auth?.currentUser as FirebaseUser, updated);
 };
