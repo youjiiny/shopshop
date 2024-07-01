@@ -1,5 +1,6 @@
 import { useAuthContext } from 'context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import { AuthContextType } from 'types/auth';
 
 type Props = {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ type Props = {
 };
 
 const ProtectedRoute = ({ children, requireAdmin, requireUser }: Props) => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   if (
     (requireUser && !user) ||
     (requireAdmin && !user?.isAdmin) ||

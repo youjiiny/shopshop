@@ -1,8 +1,10 @@
 import ShippingAddressForm from 'components/ShippingAddressForm';
+import UserInfo from 'components/UserInfo';
 import { useAuthContext } from 'context/AuthContext';
+import { AuthContextType } from 'types/auth';
 
 const MyPageSetting = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
 
   return (
     <div className='w-full'>
@@ -16,6 +18,7 @@ const MyPageSetting = () => {
             <p>{user?.email}</p>
           </div>
         )}
+        <UserInfo />
         <ShippingAddressForm />
       </section>
     </div>

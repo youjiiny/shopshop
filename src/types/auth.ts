@@ -1,3 +1,5 @@
+import { User as FirebaseUser } from 'firebase/auth';
+
 export type CompanyUserSignUpType = {
   email: string;
   password: string;
@@ -8,6 +10,8 @@ export type Address = {
   roadAddress: string;
   detailAddress: string;
 };
-export type User = {
-  address?: Address;
+export type User = (FirebaseUser & { isAdmin?: boolean }) | null;
+export type AuthContextType = {
+  user: User;
+  updateUser: (updated: { displayName: string }) => void;
 };

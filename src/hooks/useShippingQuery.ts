@@ -6,10 +6,10 @@ import {
 } from '@tanstack/react-query';
 import { addShippingAddress, getShippingAddress } from 'api/auth';
 import { useAuthContext } from 'context/AuthContext';
-import { Address } from 'types/auth';
+import { Address, AuthContextType } from 'types/auth';
 
 export const useShippingQuery = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const queryClient = useQueryClient();
   const { data: address, error } = useQuery<
     Address,

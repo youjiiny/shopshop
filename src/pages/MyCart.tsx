@@ -7,9 +7,10 @@ import { PriceCard } from 'components/PriceCard';
 import { useCartQuery } from 'hooks/useCartQuery';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import OrderProcess from 'components/OrderProcess';
+import { AuthContextType } from 'types/auth';
 
 const MyCart = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const navigate = useNavigate();
   const { isLoading, products } = useCartQuery();
 
