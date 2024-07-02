@@ -16,6 +16,7 @@ import { useModalStore } from 'store/modal';
 import Modal from 'components/Modal';
 import AddToCartModal from 'components/AddToCartModal';
 import SelectedOptionModal from 'components/SelectedOptionModal';
+import { AuthContextType } from 'types/auth';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,7 +28,7 @@ const ProductDetail = () => {
     queryKey: ['products', id],
     queryFn: () => getProudctDetail(id as string),
   });
-  const user = useAuthContext();
+  const { user } = useAuthContext() as AuthContextType;
   const queryClient = useQueryClient();
   const { isOpen, mode, setMode, toggleModal } = useModalStore();
   const {

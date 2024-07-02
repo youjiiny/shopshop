@@ -2,6 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { CartItemType } from 'types/product';
 import { AuthContextType } from 'types/auth';
+import { useState } from 'react';
+import { TabContextType, useTabContext } from 'context/TabContext';
 
 const PaymentInfo = () => {
   const { user } = useAuthContext() as AuthContextType;
@@ -10,6 +12,14 @@ const PaymentInfo = () => {
     'myCart',
     user?.uid as string,
   ]);
+  const [checkedList, setCheckedList] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [checked, setChecked] = useState<boolean>(false);
+  const { isComplete } = useTabContext() as TabContextType;
   const list = ['총 상품 금액', '배송비', '총 결제금액'];
   const totalPrice = products?.reduce((acc, cur) => (acc += cur.price), 0);
   const SHIPPING = totalPrice! >= 70000 ? 0 : 3000;
@@ -23,6 +33,33 @@ const PaymentInfo = () => {
     if (list === '총 결제금액') {
       return (totalPrice as number) + SHIPPING;
     }
+  };
+  const handlePay = () => {
+    if (checkedList.every((checked) => checked) && isComplete) {
+      alert('결제!');
+    }
+  };
+  const handleCheckAll = () => {
+    if (!checked) {
+      setCheckedList((checkedList) => checkedList.map((c) => true));
+    } else {
+      setCheckedList((checkedList) => checkedList.map((c) => false));
+    }
+    setChecked((prev) => !prev);
+  };
+  const handleCheck = (index: number) => {
+    const checked = checkedList[index];
+    const shallow = [...checkedList];
+    shallow[index] = !checked;
+    const isRequiredChecked = shallow[1] && shallow[2] && shallow[3];
+    if (isRequiredChecked) {
+      shallow[0] = true;
+      setChecked(true);
+    } else {
+      shallow[0] = false;
+      setChecked(false);
+    }
+    setCheckedList(shallow);
   };
 
   return (
@@ -48,7 +85,13 @@ const PaymentInfo = () => {
         <div className='pt-6'>
           <div>
             <span className='flex gap-1'>
-              <input type='checkbox' id='order-check' name='order-check' />
+              <input
+                type='checkbox'
+                id='order-check'
+                name='order-check'
+                onChange={handleCheckAll}
+                checked={checkedList[0]}
+              />
               <label htmlFor='order-check'>
                 주문 내용을 확인했으며, 아래 내용에 모두 동의합니다.
               </label>
@@ -60,6 +103,8 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='consent-collection'
                 name='consent-collection'
+                onChange={() => handleCheck(1)}
+                checked={checkedList[1]}
               />
               <label htmlFor='consent-collection'>
                 (필수) 개인정보 수집/이용 동의
@@ -70,6 +115,8 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='consent-information'
                 name='consent-information'
+                onChange={() => handleCheck(2)}
+                checked={checkedList[2]}
               />
               <label htmlFor='consent-information'>
                 (필수) 개인정보 제3자 제공 동의
@@ -80,6 +127,8 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='payment-service'
                 name='payment-service'
+                onChange={() => handleCheck(3)}
+                checked={checkedList[3]}
               />
               <label htmlFor='payment-service'>
                 (필수) 결제대행 서비스 이용약관
@@ -88,7 +137,10 @@ const PaymentInfo = () => {
           </ul>
         </div>
         <div className='mt-7'>
-          <button className='w-full h-16 bg-black text-2xl text-white font-semibold'>
+          <button
+            className='w-full h-16 bg-black text-2xl text-white font-semibold'
+            onClick={handlePay}
+          >
             CHECK OUT
           </button>
         </div>

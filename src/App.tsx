@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProductCountProvider } from 'context/ProductCountContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { TabProvider } from 'context/TabContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,10 +25,12 @@ function App() {
       <ReactQueryDevtools initialIsOpen={true} />
       <AuthProvider>
         <Navbar />
-        <ProductCountProvider>
-          <Outlet />
-          <ToastContainer />
-        </ProductCountProvider>
+        <TabProvider>
+          <ProductCountProvider>
+            <Outlet />
+            <ToastContainer />
+          </ProductCountProvider>
+        </TabProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
