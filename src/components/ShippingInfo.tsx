@@ -2,7 +2,13 @@ import { TabContextType, useTabContext } from 'context/TabContext';
 import ShippingTabDecider from './ShippingTabDecider';
 
 const ShippingInfo = () => {
-  const { tab, setTab } = useTabContext() as TabContextType;
+  const { tab, setTab, setIsComplete } = useTabContext() as TabContextType;
+  const handleClick = (tab: 'origin' | 'new') => {
+    setTab(tab);
+    if (tab === 'new') {
+      setIsComplete(false);
+    }
+  };
 
   return (
     <section>
@@ -23,13 +29,13 @@ const ShippingInfo = () => {
           <li
             role='button'
             className={`w-40 h-14 flex items-center justify-center text-sm cursor:pointer border ${tab === 'origin' ? 'bg-white' : 'bg-gray-100 text-slate-400'}`}
-            onClick={() => setTab('origin')}
+            onClick={() => handleClick('origin')}
           >
             기존 배송지
           </li>
           <li
             className={`w-40 h-14 flex items-center justify-center text-sm cursor:pointer border ${tab === 'new' ? 'bg-white' : 'bg-gray-100 text-slate-400'}`}
-            onClick={() => setTab('new')}
+            onClick={() => handleClick('new')}
           >
             신규입력
           </li>
