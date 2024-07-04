@@ -24,10 +24,16 @@ const NewShippingForm = () => {
     part3: '',
   });
   const open = useDaumPostcodePopup(postcodeScriptUrl);
-  const { isComplete, setIsComplete } = useTabContext() as TabContextType;
+  const { isComplete, setIsComplete, setUserAddress, setUserPhone } =
+    useTabContext() as TabContextType;
 
   const handleComplete = (data: Address) => {
     setAddress({
+      ...address,
+      zoneCode: data.zonecode,
+      roadAddress: data.roadAddress,
+    });
+    setUserAddress({
       ...address,
       zoneCode: data.zonecode,
       roadAddress: data.roadAddress,
@@ -36,10 +42,17 @@ const NewShippingForm = () => {
   const handleChangePrimary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setPrimaryPhone({ ...primaryPhone, [name]: value });
+    setUserPhone(
+      `${primaryPhone.part1}-${primaryPhone.part2}-${primaryPhone.part3}`,
+    );
   };
   const handleChangeSecondary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setSecondaryPhone({ ...secondaryPhone, [name]: value });
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress({ ...address, detailAddress: e.target.value });
+    setUserAddress({ ...address, detailAddress: e.target.value });
   };
 
   const updateIsComplete = useCallback(
@@ -54,7 +67,12 @@ const NewShippingForm = () => {
       primaryPhone.part1.length >= 3 &&
       primaryPhone.part2.length >= 3 &&
       primaryPhone.part3.length >= 4;
-    const shouldBeComplete = address && receiver.trim() && isPhoneComplete;
+    const shouldBeComplete =
+      address.zoneCode &&
+      address.roadAddress &&
+      address.detailAddress &&
+      receiver.trim() &&
+      isPhoneComplete;
     if (isComplete !== shouldBeComplete) {
       //setIsComplete(shouldBeComplete as boolean);
       updateIsComplete(shouldBeComplete as boolean);
@@ -85,8 +103,8 @@ const NewShippingForm = () => {
           <i className='text-red-600'>*</i>
         </h2>
         <div className='flex flex-col flex-1'>
-          <div className='flex gap-2 pb-3 max-w-96'>
-            <div className='border flex-1 font-semibold px-3 py-2'>
+          <div className='flex items-center gap-2 pb-3 max-w-96'>
+            <div className='h-10 border flex-1 font-semibold px-3 py-2'>
               {address.zoneCode}
             </div>
             <button
@@ -107,9 +125,7 @@ const NewShippingForm = () => {
               className='w-full h-10 px-3'
               value={address.detailAddress}
               placeholder='상세주소 입력'
-              onChange={(e) =>
-                setAddress({ ...address, detailAddress: e.target.value })
-              }
+              onChange={handleChange}
             />
           </div>
         </div>

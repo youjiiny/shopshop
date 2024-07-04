@@ -1,13 +1,15 @@
 import { TabContextType, useTabContext } from 'context/TabContext';
-import ShippingTabDecider from './ShippingTabDecider';
+import OriginShippingForm from './OriginShippingForm';
+import NewShippingForm from './NewShippingForm';
 
 const ShippingInfo = () => {
-  const { tab, setTab, setIsComplete } = useTabContext() as TabContextType;
+  const { tab, setTab, setIsComplete, setUserAddress, setUserPhone } =
+    useTabContext() as TabContextType;
   const handleClick = (tab: 'origin' | 'new') => {
     setTab(tab);
-    if (tab === 'new') {
-      setIsComplete(false);
-    }
+    setIsComplete(false);
+    setUserAddress(undefined);
+    setUserPhone('');
   };
 
   return (
@@ -41,7 +43,7 @@ const ShippingInfo = () => {
           </li>
         </ul>
       </div>
-      <ShippingTabDecider />
+      {tab === 'origin' ? <OriginShippingForm /> : <NewShippingForm />}
     </section>
   );
 };
