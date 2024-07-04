@@ -4,6 +4,8 @@ import { CartItemType } from 'types/product';
 import { AuthContextType } from 'types/auth';
 import { useState } from 'react';
 import { TabContextType, useTabContext } from 'context/TabContext';
+import { handlePayment } from 'lib/payment';
+import { Address } from 'types/auth';
 
 const PaymentInfo = () => {
   const { user } = useAuthContext() as AuthContextType;
@@ -19,7 +21,8 @@ const PaymentInfo = () => {
     false,
   ]);
   const [checked, setChecked] = useState<boolean>(false);
-  const { isComplete } = useTabContext() as TabContextType;
+  const { isComplete, userAddress, userPhone } =
+    useTabContext() as TabContextType;
   const list = ['총 상품 금액', '배송비', '총 결제금액'];
   const totalPrice = products?.reduce((acc, cur) => (acc += cur.price), 0);
   const SHIPPING = totalPrice! >= 70000 ? 0 : 3000;
@@ -36,7 +39,11 @@ const PaymentInfo = () => {
   };
   const handlePay = () => {
     if (checkedList.every((checked) => checked) && isComplete) {
-      alert('결제!');
+      handlePayment({
+        userName: user?.displayName as string,
+        userAddress: userAddress as Address,
+        userPhone,
+      });
     }
   };
   const handleCheckAll = () => {

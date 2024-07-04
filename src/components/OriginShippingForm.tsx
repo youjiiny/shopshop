@@ -17,20 +17,16 @@ const OriginShippingForm = () => {
     part2: '',
     part3: '',
   });
-  const { isComplete, setIsComplete } = useTabContext() as TabContextType;
+  const { isComplete, setIsComplete, setUserAddress, setUserPhone } =
+    useTabContext() as TabContextType;
   console.log('isComplete', isComplete);
 
-  if (!address) {
-    return (
-      <p className='text-center text-sm text-[#A8A8A8] pt-24 pb-32'>
-        등록된 배송지가 없습니다. <br />
-        배송지를 신규입력 해주세요.
-      </p>
-    );
-  }
   const handleChangePrimary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setPrimaryPhone({ ...primaryPhone, [name]: value });
+    setUserPhone(
+      `${primaryPhone.part1}-${primaryPhone.part2}-${primaryPhone.part3}`,
+    );
   };
   const handleChangeSecondary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -44,6 +40,9 @@ const OriginShippingForm = () => {
   );
 
   useEffect(() => {
+    if (address) {
+      setUserAddress(address);
+    }
     const isPhoneComplete =
       primaryPhone.part1.length >= 3 &&
       primaryPhone.part2.length >= 3 &&
@@ -55,6 +54,14 @@ const OriginShippingForm = () => {
       updateIsComplete(shouldBeComplete as boolean);
     }
   }, [address, user?.displayName, primaryPhone, isComplete, setIsComplete]);
+  if (!address) {
+    return (
+      <p className='text-center text-sm text-[#A8A8A8] pt-24 pb-32'>
+        등록된 배송지가 없습니다. <br />
+        배송지를 신규입력 해주세요.
+      </p>
+    );
+  }
 
   return (
     <div className='pb-8'>
@@ -75,18 +82,13 @@ const OriginShippingForm = () => {
           배송지<i className='text-red-600'>*</i>
         </h2>
         <div className='flex flex-col flex-1'>
-          <div className='flex gap-2 pb-3 max-w-96'>
-            <div className='border flex-1 font-semibold px-3 py-2'>
+          <div className='flex pb-3 max-w-96'>
+            <div className='w-2/3 h-10 border font-semibold px-3 py-2'>
               {address.zoneCode}
             </div>
-            <button className='w-28 h-12 bg-gray-50 ml-2 text-xs text-[#303033]'>
-              우편번호 검색
-            </button>
           </div>
           <div className='pb-3'>
-            <div className='border h-full min-h-10 px-3 py-2'>
-              {address.roadAddress}
-            </div>
+            <div className='border h-10 px-3 py-2'>{address.roadAddress}</div>
           </div>
           <div>
             <input
