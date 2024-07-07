@@ -46,8 +46,9 @@ const PaymentInfo = () => {
     }
   };
   const handlePay = () => {
-    if (!isComplete && PHONE_REGEX.test(userPhone)) {
+    if (!isComplete && !PHONE_REGEX.test(userPhone)) {
       openModal(<ConfirmContactModal />);
+      return;
     }
     if (checkedList.every((checked) => checked) && isComplete) {
       handlePayment({
