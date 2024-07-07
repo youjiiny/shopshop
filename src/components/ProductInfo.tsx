@@ -1,8 +1,7 @@
-import { useAuthContext } from 'context/AuthContext';
 import { useCartQuery } from 'hooks/useCartQuery';
+import { v4 as uuidv4 } from 'uuid';
 
 const ProductInfo = () => {
-  const user = useAuthContext();
   const { products } = useCartQuery();
 
   return (
@@ -12,9 +11,9 @@ const ProductInfo = () => {
       </header>
       <ul className='my-6'>
         {products?.map((product) => {
-          const { id, name, image, size, price, quantity } = product;
+          const { name, image, size, price, quantity } = product;
           return (
-            <li key={id} className='w-full mt-7'>
+            <li key={uuidv4()} className='w-full mt-7'>
               <div className='w-full flex items-center'>
                 <div className='mr-5'>
                   <img
