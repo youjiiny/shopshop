@@ -15,7 +15,6 @@ import { useAuthContext } from 'context/AuthContext';
 import { useModalStore } from 'store/modal';
 import Modal from 'components/Modal';
 import AddToCartModal from 'components/AddToCartModal';
-import SelectedOptionModal from 'components/SelectedOptionModal';
 import { AuthContextType } from 'types/auth';
 
 const ProductDetail = () => {
@@ -30,7 +29,7 @@ const ProductDetail = () => {
   });
   const { user } = useAuthContext() as AuthContextType;
   const queryClient = useQueryClient();
-  const { isOpen, mode, setMode, toggleModal } = useModalStore();
+  const { openModal } = useModalStore();
   const {
     size: option,
     selected,
@@ -58,10 +57,7 @@ const ProductDetail = () => {
 
   const handleAdd = () => {
     if (!selected) return;
-    if (mode !== 'add cart') {
-      setMode('add cart');
-    }
-    toggleModal();
+    openModal(<AddToCartModal />);
     const products: CartItemType[] | undefined = queryClient.getQueryData([
       'myCart',
       user?.uid as string,
@@ -98,16 +94,6 @@ const ProductDetail = () => {
 
   return (
     <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
-      {isOpen && mode === 'add cart' && (
-        <Modal>
-          <AddToCartModal />
-        </Modal>
-      )}
-      {isOpen && mode === 'duplicate option' && (
-        <Modal>
-          <SelectedOptionModal />
-        </Modal>
-      )}
       <img
         className='w-full basis-1/2 md:w-140 md:h-140'
         src={image}
@@ -151,6 +137,7 @@ const ProductDetail = () => {
           장바구니 담기
         </button>
       </div>
+      <Modal />
     </div>
   );
 };
