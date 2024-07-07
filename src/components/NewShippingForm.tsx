@@ -64,9 +64,9 @@ const NewShippingForm = () => {
 
   useEffect(() => {
     const isPhoneComplete =
-      primaryPhone.part1.length >= 3 &&
+      primaryPhone.part1.length >= 2 &&
       primaryPhone.part2.length >= 3 &&
-      primaryPhone.part3.length >= 4;
+      primaryPhone.part3.length === 4;
     const shouldBeComplete =
       address.zoneCode &&
       address.roadAddress &&

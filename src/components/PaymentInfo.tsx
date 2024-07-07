@@ -6,9 +6,14 @@ import { useState } from 'react';
 import { TabContextType, useTabContext } from 'context/TabContext';
 import { handlePayment } from 'lib/payment';
 import { Address } from 'types/auth';
+import { PHONE_REGEX } from 'utils/checkEffectiveness';
+import { useModalStore } from 'store/modal';
+import ConfirmContactModal from './ConfirmContactModal';
+import Modal from './Modal';
 
 const PaymentInfo = () => {
   const { user } = useAuthContext() as AuthContextType;
+  const { openModal } = useModalStore();
   const queryClient = useQueryClient();
   const products: CartItemType[] | undefined = queryClient.getQueryData([
     'myCart',
@@ -24,7 +29,10 @@ const PaymentInfo = () => {
   const { isComplete, userAddress, userPhone } =
     useTabContext() as TabContextType;
   const list = ['총 상품 금액', '배송비', '총 결제금액'];
-  const totalPrice = products?.reduce((acc, cur) => (acc += cur.price), 0);
+  const totalPrice = products?.reduce(
+    (acc, cur) => (acc += cur.price * cur.quantity),
+    0,
+  );
   const SHIPPING = totalPrice! >= 70000 ? 0 : 3000;
   const getPrice = (list: string) => {
     if (list === '총 상품 금액') {
@@ -38,6 +46,9 @@ const PaymentInfo = () => {
     }
   };
   const handlePay = () => {
+    if (!isComplete && PHONE_REGEX.test(userPhone)) {
+      openModal(<ConfirmContactModal />);
+    }
     if (checkedList.every((checked) => checked) && isComplete) {
       handlePayment({
         userName: user?.displayName as string,
@@ -45,6 +56,9 @@ const PaymentInfo = () => {
         userPhone,
       });
     }
+    // 성공적으로 결제가 다 되면 카트 안은 비어져야함.
+    // 주문 기록은 DB에 저장함. => 나중에 주문조회로 조회할 예정
+    // 결제 실패 시, 모달로 실패한거 보여주기
   };
   const handleCheckAll = () => {
     if (!checked) {
@@ -152,6 +166,7 @@ const PaymentInfo = () => {
           </button>
         </div>
       </div>
+      <Modal />
     </section>
   );
 };
