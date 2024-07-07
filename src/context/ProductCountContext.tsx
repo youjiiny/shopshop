@@ -1,3 +1,4 @@
+import SelectedOptionModal from 'components/SelectedOptionModal';
 import {
   ReactNode,
   createContext,
@@ -16,12 +17,11 @@ export const ProductCountProvider = ({ children }: { children: ReactNode }) => {
   const [selected, setSelected] = useState<ProductSize | null>(null);
   const [price, setPrice] = useState<number>(0);
   const { id } = useParams();
-  const { setMode, toggleModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   const selectProduct = (option: string) => {
     if (size.includes(option)) {
-      setMode('duplicate option');
-      toggleModal();
+      openModal(<SelectedOptionModal />);
       return;
     }
     setSize((size) => [...size, option]);

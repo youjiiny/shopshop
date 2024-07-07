@@ -5,7 +5,7 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import { PriceCard } from 'components/PriceCard';
 import { useCartQuery } from 'hooks/useCartQuery';
-import { useNavigate, useRouteError } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import OrderProcess from 'components/OrderProcess';
 import { AuthContextType } from 'types/auth';
 
