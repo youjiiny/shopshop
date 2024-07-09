@@ -1,15 +1,30 @@
 import { TabContextType, useTabContext } from 'context/TabContext';
 import OriginShippingForm from './OriginShippingForm';
 import NewShippingForm from './NewShippingForm';
+import { Address, Receiver } from 'types/auth';
 
-const ShippingInfo = () => {
-  const { tab, setTab, setIsComplete, setUserAddress, setUserPhone } =
-    useTabContext() as TabContextType;
+type Props = {
+  receiver: Receiver;
+  setReceiver: (value: Receiver) => void;
+  address: Address;
+  setAddress: (value: Address) => void;
+};
+
+const ShippingInfo = ({
+  receiver,
+  setReceiver,
+  address,
+  setAddress,
+}: Props) => {
+  const { tab, setTab } = useTabContext() as TabContextType;
   const handleClick = (tab: 'origin' | 'new') => {
     setTab(tab);
-    setIsComplete(false);
-    setUserAddress(undefined);
-    setUserPhone('');
+    setReceiver({
+      name: '',
+      phone1: { part1: '', part2: '', part3: '' },
+      phone2: { part1: '', part2: '', part3: '' },
+    });
+    setAddress({ zoneCode: '', roadAddress: '', detailAddress: '' });
   };
 
   return (
@@ -43,7 +58,21 @@ const ShippingInfo = () => {
           </li>
         </ul>
       </div>
-      {tab === 'origin' ? <OriginShippingForm /> : <NewShippingForm />}
+      {tab === 'origin' ? (
+        <OriginShippingForm
+          receiver={receiver}
+          setReceiver={setReceiver}
+          address={address}
+          setAddress={setAddress}
+        />
+      ) : (
+        <NewShippingForm
+          receiver={receiver}
+          setReceiver={setReceiver}
+          address={address}
+          setAddress={setAddress}
+        />
+      )}
     </section>
   );
 };
