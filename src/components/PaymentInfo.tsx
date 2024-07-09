@@ -1,17 +1,17 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthContext } from 'context/AuthContext';
 import { CartItemType } from 'types/product';
-import { AuthContextType } from 'types/auth';
+import { AuthContextType, Receiver, Address } from 'types/auth';
 import { useState } from 'react';
-import { TabContextType, useTabContext } from 'context/TabContext';
 import { handlePayment } from 'lib/payment';
-import { Address } from 'types/auth';
 import { PHONE_REGEX } from 'utils/checkEffectiveness';
 import { useModalStore } from 'store/modal';
-import ConfirmContactModal from './ConfirmContactModal';
 import Modal from './Modal';
+import MissingInfoModal from './MissingInfoModal';
 
-const PaymentInfo = () => {
+type Props = { receiver: Receiver; address: Address };
+
+const PaymentInfo = ({ receiver, address }: Props) => {
   const { user } = useAuthContext() as AuthContextType;
   const { openModal } = useModalStore();
   const queryClient = useQueryClient();
@@ -26,8 +26,6 @@ const PaymentInfo = () => {
     false,
   ]);
   const [checked, setChecked] = useState<boolean>(false);
-  const { isComplete, userAddress, userPhone } =
-    useTabContext() as TabContextType;
   const list = ['총 상품 금액', '배송비', '총 결제금액'];
   const totalPrice = products?.reduce(
     (acc, cur) => (acc += cur.price * cur.quantity),
@@ -46,17 +44,31 @@ const PaymentInfo = () => {
     }
   };
   const handlePay = () => {
-    if (!isComplete && !PHONE_REGEX.test(userPhone)) {
-      openModal(<ConfirmContactModal />);
+    if (!receiver.name) {
+      openModal(<MissingInfoModal missing='name' />);
       return;
     }
-    if (checkedList.every((checked) => checked) && isComplete) {
-      handlePayment({
-        userName: user?.displayName as string,
-        userAddress: userAddress as Address,
-        userPhone,
-      });
+    if (!address.zoneCode && !address.roadAddress) {
+      openModal(<MissingInfoModal missing='address' />);
+      return;
     }
+    const phone = `${receiver.phone1.part1}-${receiver.phone1.part2}-${receiver.phone1.part3}`;
+    if (!PHONE_REGEX.test(phone)) {
+      console.log('address', address);
+      openModal(<MissingInfoModal missing='phone' />);
+      return;
+    }
+    if (!checkedList.every((checked) => checked)) {
+      openModal(<MissingInfoModal missing='checkbox' />);
+      console.log('결제를 위해 필수사항에 모두 동의해주세요.');
+      return;
+    }
+    handlePayment({
+      name: receiver.name as string,
+      address: address as Address,
+      phone,
+    });
+
     // 성공적으로 결제가 다 되면 카트 안은 비어져야함.
     // 주문 기록은 DB에 저장함. => 나중에 주문조회로 조회할 예정
     // 결제 실패 시, 모달로 실패한거 보여주기
@@ -94,27 +106,28 @@ const PaymentInfo = () => {
           {list.map((l, i) => (
             <li key={i} className='flex justify-between last:mt-4'>
               <span
-                className={`text-sm text-secondary ${i === list.length - 1 ? 'font-bold' : ''}`}
+                className={`text-secondary ${l === '총 결제금액' ? 'text-lg font-bold' : 'text-sm'}`}
               >
                 {l}
               </span>
               <span
-                className={`${i === list.length - 1 ? 'font-bold text-price-stress text-2xl' : ''}`}
+                className={`${i === list.length - 1 ? 'font-bold text-price-stress text-3xl' : ''}`}
               >{`${getPrice(l)?.toLocaleString()}원`}</span>
             </li>
           ))}
         </ul>
-        <div className='pt-6'>
+        <div className='pt-6 border-t'>
           <div>
-            <span className='flex gap-1'>
+            <span className='flex leading-6'>
               <input
                 type='checkbox'
                 id='order-check'
                 name='order-check'
+                className='w-5'
                 onChange={handleCheckAll}
                 checked={checkedList[0]}
               />
-              <label htmlFor='order-check'>
+              <label htmlFor='order-check' className='p-1'>
                 주문 내용을 확인했으며, 아래 내용에 모두 동의합니다.
               </label>
             </span>
@@ -125,11 +138,15 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='consent-collection'
                 name='consent-collection'
+                className='w-5'
                 onChange={() => handleCheck(1)}
                 checked={checkedList[1]}
               />
-              <label htmlFor='consent-collection'>
-                (필수) 개인정보 수집/이용 동의
+              <label
+                htmlFor='consent-collection'
+                className='text-sm text-label p-1'
+              >
+                <strong>(필수) </strong>개인정보 수집/이용 동의
               </label>
             </li>
             <li className='flex gap-1'>
@@ -137,11 +154,15 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='consent-information'
                 name='consent-information'
+                className='w-5'
                 onChange={() => handleCheck(2)}
                 checked={checkedList[2]}
               />
-              <label htmlFor='consent-information'>
-                (필수) 개인정보 제3자 제공 동의
+              <label
+                htmlFor='consent-information'
+                className='text-sm text-label p-1'
+              >
+                <strong>(필수)</strong> 개인정보 제3자 제공 동의
               </label>
             </li>
             <li className='flex gap-1'>
@@ -149,18 +170,22 @@ const PaymentInfo = () => {
                 type='checkbox'
                 id='payment-service'
                 name='payment-service'
+                className='w-5'
                 onChange={() => handleCheck(3)}
                 checked={checkedList[3]}
               />
-              <label htmlFor='payment-service'>
-                (필수) 결제대행 서비스 이용약관
+              <label
+                htmlFor='payment-service'
+                className='text-sm text-label p-1'
+              >
+                <strong>(필수)</strong> 결제대행 서비스 이용약관
               </label>
             </li>
           </ul>
         </div>
         <div className='mt-7'>
           <button
-            className='w-full h-16 bg-black text-2xl text-white font-semibold'
+            className='w-full h-16 bg-black text-[26px] text-white font-semibold hover:text-price-stress'
             onClick={handlePay}
           >
             CHECK OUT

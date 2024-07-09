@@ -1,31 +1,24 @@
-import { TabContextType, useTabContext } from 'context/TabContext';
-import { useCallback, useEffect, useState } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import {
   Address,
   postcodeScriptUrl,
 } from 'react-daum-postcode/lib/loadPostcode';
+import { Receiver, Address as AddressType } from 'types/auth';
 
-const NewShippingForm = () => {
-  const [receiver, setReceiver] = useState<string>('');
-  const [address, setAddress] = useState({
-    zoneCode: '',
-    roadAddress: '',
-    detailAddress: '',
-  });
-  const [primaryPhone, setPrimaryPhone] = useState({
-    part1: '',
-    part2: '',
-    part3: '',
-  });
-  const [secondaryPhone, setSecondaryPhone] = useState({
-    part1: '',
-    part2: '',
-    part3: '',
-  });
+type Props = {
+  receiver: Receiver;
+  setReceiver: (value: Receiver) => void;
+  address: AddressType;
+  setAddress: (value: AddressType) => void;
+};
+
+const NewShippingForm = ({
+  receiver,
+  setReceiver,
+  address,
+  setAddress,
+}: Props) => {
   const open = useDaumPostcodePopup(postcodeScriptUrl);
-  const { isComplete, setIsComplete, setUserAddress, setUserPhone } =
-    useTabContext() as TabContextType;
 
   const handleComplete = (data: Address) => {
     setAddress({
@@ -33,51 +26,28 @@ const NewShippingForm = () => {
       zoneCode: data.zonecode,
       roadAddress: data.roadAddress,
     });
-    setUserAddress({
-      ...address,
-      zoneCode: data.zonecode,
-      roadAddress: data.roadAddress,
-    });
   };
   const handleChangePrimary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setPrimaryPhone({ ...primaryPhone, [name]: value });
-    setUserPhone(
-      `${primaryPhone.part1}-${primaryPhone.part2}-${primaryPhone.part3}`,
-    );
+    const shallow = { ...receiver };
+    shallow.phone1 = {
+      ...receiver.phone1,
+      [name]: value,
+    };
+    setReceiver(shallow);
   };
   const handleChangeSecondary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setSecondaryPhone({ ...secondaryPhone, [name]: value });
+    const shallow = { ...receiver };
+    shallow.phone2 = {
+      ...receiver.phone2,
+      [name]: value,
+    };
+    setReceiver(shallow);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, detailAddress: e.target.value });
-    setUserAddress({ ...address, detailAddress: e.target.value });
   };
-
-  const updateIsComplete = useCallback(
-    (shouldBeComplete: boolean) => {
-      setIsComplete(shouldBeComplete);
-    },
-    [setIsComplete],
-  );
-
-  useEffect(() => {
-    const isPhoneComplete =
-      primaryPhone.part1.length >= 2 &&
-      primaryPhone.part2.length >= 3 &&
-      primaryPhone.part3.length === 4;
-    const shouldBeComplete =
-      address.zoneCode &&
-      address.roadAddress &&
-      address.detailAddress &&
-      receiver.trim() &&
-      isPhoneComplete;
-    if (isComplete !== shouldBeComplete) {
-      //setIsComplete(shouldBeComplete as boolean);
-      updateIsComplete(shouldBeComplete as boolean);
-    }
-  }, [address, primaryPhone, receiver, isComplete, setIsComplete]);
 
   return (
     <div className='pb-8'>
@@ -91,9 +61,9 @@ const NewShippingForm = () => {
             type='text'
             className='w-full h-10 px-3 text-sm'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setReceiver(e.target.value)
+              setReceiver({ ...receiver, name: e.target.value })
             }
-            value={receiver}
+            value={receiver.name}
           />
         </div>
       </div>
@@ -141,7 +111,7 @@ const NewShippingForm = () => {
             type='text'
             name='part1'
             onChange={handleChangePrimary}
-            value={primaryPhone.part1}
+            value={receiver.phone1.part1}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -149,7 +119,7 @@ const NewShippingForm = () => {
             type='text'
             name='part2'
             onChange={handleChangePrimary}
-            value={primaryPhone.part2}
+            value={receiver.phone1.part2}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -157,7 +127,7 @@ const NewShippingForm = () => {
             type='text'
             name='part3'
             onChange={handleChangePrimary}
-            value={primaryPhone.part3}
+            value={receiver.phone1.part3}
           />
         </div>
       </div>
@@ -169,7 +139,7 @@ const NewShippingForm = () => {
             type='text'
             name='part1'
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part1}
+            value={receiver.phone2.part1}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -177,7 +147,7 @@ const NewShippingForm = () => {
             type='text'
             name='part2'
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part2}
+            value={receiver.phone2.part2}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -185,7 +155,7 @@ const NewShippingForm = () => {
             type='text'
             name='part3'
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part3}
+            value={receiver.phone2.part3}
           />
         </div>
       </div>

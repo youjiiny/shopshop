@@ -2,18 +2,18 @@ import { Address } from 'types/auth';
 import { RequestPayParams, RequestPayResponse } from 'types/portone';
 
 export const handlePayment = ({
-  userName,
-  userAddress,
-  userPhone,
+  name,
+  address,
+  phone,
 }: {
-  userName: string;
-  userAddress: Address;
-  userPhone: string;
+  name: string;
+  address: Address;
+  phone: string;
 }) => {
   if (!window.IMP) return;
   const { IMP } = window;
   IMP.init(import.meta.env.VITE_PORTONE_CODE);
-  const { zoneCode, roadAddress, detailAddress } = userAddress;
+  const { zoneCode, roadAddress, detailAddress } = address;
 
   // 결제 데이터 정의하기
   const data: RequestPayParams = {
@@ -22,8 +22,8 @@ export const handlePayment = ({
     merchant_uid: `mid_${new Date().getTime()}`,
     amount: 100,
     name: 'Shopshop 쇼핑몰',
-    buyer_name: userName,
-    buyer_tel: userPhone,
+    buyer_name: name,
+    buyer_tel: phone,
     buyer_addr: `${roadAddress} ${detailAddress}`,
     buyer_postcode: zoneCode,
   };

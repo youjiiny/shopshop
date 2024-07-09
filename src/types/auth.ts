@@ -15,3 +15,16 @@ export type AuthContextType = {
   user: User;
   updateUser: (updated: { displayName: string }) => void;
 };
+export type Receiver = {
+  name: string;
+  phone1: {
+    part1: string;
+    part2: string;
+    part3: string;
+  };
+  phone2: {
+    part1: string;
+    part2: string;
+    part3: string;
+  };
+};

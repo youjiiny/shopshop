@@ -1,62 +1,46 @@
 import { useAuthContext } from 'context/AuthContext';
-import { TabContextType, useTabContext } from 'context/TabContext';
 import { useShippingQuery } from 'hooks/useShippingQuery';
-import { useCallback, useEffect, useState } from 'react';
-import { AuthContextType } from 'types/auth';
+import { useEffect } from 'react';
+import { Address, AuthContextType, Receiver } from 'types/auth';
 
-const OriginShippingForm = () => {
+type Props = {
+  receiver: Receiver;
+  setReceiver: (value: Receiver) => void;
+  address: Address;
+  setAddress: (value: Address) => void;
+};
+
+const OriginShippingForm = ({ receiver, setReceiver, setAddress }: Props) => {
   const { address } = useShippingQuery();
   const { user } = useAuthContext() as AuthContextType;
-  const [primaryPhone, setPrimaryPhone] = useState({
-    part1: '',
-    part2: '',
-    part3: '',
-  });
-  const [secondaryPhone, setSecondaryPhone] = useState({
-    part1: '',
-    part2: '',
-    part3: '',
-  });
-  const { isComplete, setIsComplete, setUserAddress, setUserPhone } =
-    useTabContext() as TabContextType;
-  console.log('isComplete', isComplete);
 
   const handleChangePrimary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setPrimaryPhone({ ...primaryPhone, [name]: value });
+    const shallow = { ...receiver };
+    shallow.phone1 = {
+      ...receiver.phone1,
+      [name]: value,
+    };
+    setReceiver(shallow);
   };
   const handleChangeSecondary = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setSecondaryPhone({ ...secondaryPhone, [name]: value });
+    const shallow = { ...receiver };
+    shallow.phone2 = {
+      ...receiver.phone2,
+      [name]: value,
+    };
+    setReceiver(shallow);
   };
-  const updateIsComplete = useCallback(
-    (shouldBeComplete: boolean) => {
-      setIsComplete(shouldBeComplete);
-    },
-    [setIsComplete],
-  );
 
   useEffect(() => {
-    if (address) {
-      setUserAddress(address);
+    if (user?.displayName) {
+      setReceiver({ ...receiver, name: user?.displayName });
     }
-    const isPhoneComplete =
-      primaryPhone.part1.length >= 2 &&
-      primaryPhone.part2.length >= 3 &&
-      primaryPhone.part3.length === 4;
-    const shouldBeComplete =
-      address && (user?.displayName as string) && isPhoneComplete;
-    if (isComplete !== shouldBeComplete) {
-      //setIsComplete(shouldBeComplete as boolean);
-      updateIsComplete(shouldBeComplete as boolean);
+    if (address?.zoneCode) {
+      setAddress(address);
     }
-  }, [address, user?.displayName, primaryPhone, isComplete, setIsComplete]);
-
-  useEffect(() => {
-    setUserPhone(
-      `${primaryPhone.part1}-${primaryPhone.part2}-${primaryPhone.part3}`,
-    );
-  }, [primaryPhone]);
+  }, [address?.zoneCode, user?.displayName]);
 
   if (!address) {
     return (
@@ -116,7 +100,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{3}'
             maxLength={4}
             onChange={handleChangePrimary}
-            value={primaryPhone.part1}
+            value={receiver.phone1.part1}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -126,7 +110,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{3,4}'
             maxLength={4}
             onChange={handleChangePrimary}
-            value={primaryPhone.part2}
+            value={receiver.phone1.part2}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -136,7 +120,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{4}'
             maxLength={4}
             onChange={handleChangePrimary}
-            value={primaryPhone.part3}
+            value={receiver.phone1.part3}
           />
         </div>
       </div>
@@ -150,7 +134,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{3}'
             maxLength={4}
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part1}
+            value={receiver.phone2.part1}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -160,7 +144,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{3,4}'
             maxLength={4}
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part2}
+            value={receiver.phone2.part2}
           />
           <span className='w-5 text-center'>-</span>
           <input
@@ -170,7 +154,7 @@ const OriginShippingForm = () => {
             pattern='[0-9]{4}'
             maxLength={4}
             onChange={handleChangeSecondary}
-            value={secondaryPhone.part3}
+            value={receiver.phone2.part3}
           />
         </div>
       </div>
