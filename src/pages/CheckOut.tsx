@@ -18,10 +18,10 @@ const CheckOut = () => {
   });
 
   return (
-    <>
+    <div className='px-5 pb-12 md:px-12 md:pb-48'>
       <OrderProcess />
-      <div className='flex justify-between px-12 pb-48'>
-        <div className='relative w-1/2 min-w-[530px]'>
+      <div className='(flex flex-col) lg:flex lg:justify-between'>
+        <div className='w-full pt-5 pb-7 md:pt-0 lg:relative lg:w-1/2 lg:min-w-[530px]'>
           <ShippingInfo
             receiver={receiver}
             setReceiver={setReceiver}
@@ -30,11 +30,11 @@ const CheckOut = () => {
           />
           <ProductInfo />
         </div>
-        <aside className='w-1/2 min-w-[370px] min-h-[1200px]'>
+        <aside className='w-full lg:w-1/2 lg:min-w-[370px] lg:min-h-[1200px]'>
           <PaymentInfo receiver={receiver} address={address} />
         </aside>
       </div>
-    </>
+    </div>
   );
 };
 
