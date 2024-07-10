@@ -8,6 +8,7 @@ import { PHONE_REGEX } from 'utils/checkEffectiveness';
 import { useModalStore } from 'store/modal';
 import Modal from './Modal';
 import MissingInfoModal from './MissingInfoModal';
+import PaymentErrorModal from './PaymentErrorModal';
 
 type Props = { receiver: Receiver; address: Address };
 
@@ -43,7 +44,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       return (totalPrice as number) + SHIPPING;
     }
   };
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!receiver.name) {
       openModal(<MissingInfoModal missing='name' />);
       return;
@@ -63,11 +64,16 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       console.log('결제를 위해 필수사항에 모두 동의해주세요.');
       return;
     }
-    handlePayment({
+    const { isSuccess, message } = await handlePayment({
       name: receiver.name as string,
       address: address as Address,
       phone,
     });
+    if (isSuccess) {
+      alert('결제 성공!');
+    } else {
+      openModal(<PaymentErrorModal message={message} />);
+    }
 
     // 성공적으로 결제가 다 되면 카트 안은 비어져야함.
     // 주문 기록은 DB에 저장함. => 나중에 주문조회로 조회할 예정
