@@ -41,5 +41,5 @@ li {
 }
 
 input[type='checkbox'] {
-  @apply cursor-pointer;
+  @apply cursor-pointer checked:accent-black;
 }

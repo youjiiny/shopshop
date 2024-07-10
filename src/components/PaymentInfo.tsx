@@ -8,6 +8,7 @@ import { PHONE_REGEX } from 'utils/checkEffectiveness';
 import { useModalStore } from 'store/modal';
 import Modal from './Modal';
 import MissingInfoModal from './MissingInfoModal';
+import PaymentErrorModal from './PaymentErrorModal';
 
 type Props = { receiver: Receiver; address: Address };
 
@@ -43,7 +44,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       return (totalPrice as number) + SHIPPING;
     }
   };
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!receiver.name) {
       openModal(<MissingInfoModal missing='name' />);
       return;
@@ -63,11 +64,16 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       console.log('결제를 위해 필수사항에 모두 동의해주세요.');
       return;
     }
-    handlePayment({
+    const { isSuccess, message } = await handlePayment({
       name: receiver.name as string,
       address: address as Address,
       phone,
     });
+    if (isSuccess) {
+      alert('결제 성공!');
+    } else {
+      openModal(<PaymentErrorModal message={message} />);
+    }
 
     // 성공적으로 결제가 다 되면 카트 안은 비어져야함.
     // 주문 기록은 DB에 저장함. => 나중에 주문조회로 조회할 예정
@@ -97,7 +103,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
   };
 
   return (
-    <section className='ml-8 border-[3px] border-black px-7 pb-10'>
+    <section className='border-[3px] border-black px-7 pb-10 lg:ml-8'>
       <header className='flex items-center h-12 border-b'>
         <h2 className='text-sm font-bold'>결제 금액</h2>
       </header>
@@ -111,34 +117,37 @@ const PaymentInfo = ({ receiver, address }: Props) => {
                 {l}
               </span>
               <span
-                className={`${i === list.length - 1 ? 'font-bold text-price-stress text-3xl' : ''}`}
+                className={`${i === list.length - 1 ? 'text-xl font-bold text-price-stress md:text-3xl' : ''}`}
               >{`${getPrice(l)?.toLocaleString()}원`}</span>
             </li>
           ))}
         </ul>
         <div className='pt-6 border-t'>
           <div>
-            <span className='flex leading-6'>
+            <span className='flex items-center gap-1'>
               <input
                 type='checkbox'
                 id='order-check'
                 name='order-check'
-                className='w-5'
+                className='w-4 h-4 md:w-5 md:h-5'
                 onChange={handleCheckAll}
                 checked={checkedList[0]}
               />
-              <label htmlFor='order-check' className='p-1'>
+              <label
+                htmlFor='order-check'
+                className='text-sm basis-11/12 md:text-base p-1'
+              >
                 주문 내용을 확인했으며, 아래 내용에 모두 동의합니다.
               </label>
             </span>
           </div>
           <ul>
-            <li className='flex gap-1'>
+            <li className='flex items-center gap-1'>
               <input
                 type='checkbox'
                 id='consent-collection'
                 name='consent-collection'
-                className='w-5'
+                className='w-4 h-4 md:w-5 md:h-5'
                 onChange={() => handleCheck(1)}
                 checked={checkedList[1]}
               />
@@ -149,12 +158,12 @@ const PaymentInfo = ({ receiver, address }: Props) => {
                 <strong>(필수) </strong>개인정보 수집/이용 동의
               </label>
             </li>
-            <li className='flex gap-1'>
+            <li className='flex items-center gap-1'>
               <input
                 type='checkbox'
                 id='consent-information'
                 name='consent-information'
-                className='w-5'
+                className='w-4 h-4 md:w-5 md:h-5'
                 onChange={() => handleCheck(2)}
                 checked={checkedList[2]}
               />
@@ -165,12 +174,12 @@ const PaymentInfo = ({ receiver, address }: Props) => {
                 <strong>(필수)</strong> 개인정보 제3자 제공 동의
               </label>
             </li>
-            <li className='flex gap-1'>
+            <li className='flex items-center gap-1'>
               <input
                 type='checkbox'
                 id='payment-service'
                 name='payment-service'
-                className='w-5'
+                className='w-4 h-4 md:w-5 md:h-5'
                 onChange={() => handleCheck(3)}
                 checked={checkedList[3]}
               />
@@ -185,7 +194,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
         </div>
         <div className='mt-7'>
           <button
-            className='w-full h-16 bg-black text-[26px] text-white font-semibold hover:text-price-stress'
+            className='w-full h-16 bg-black text-xl md:text-[26px] text-white font-semibold hover:text-price-stress'
             onClick={handlePay}
           >
             CHECK OUT

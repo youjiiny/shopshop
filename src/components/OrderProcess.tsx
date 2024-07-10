@@ -14,7 +14,7 @@ const OrderProcess = () => {
     return '';
   };
   return (
-    <div className='flex justify-center pt-20 pb-24'>
+    <div className='hidden md:visible md:flex justify-center pt-20 pb-24'>
       <ol className='flex gap-2 text-[15px]'>
         {process.map((p, i) => (
           <li key={i} className={`flex items-center gap-2 ${fontBold(i)}`}>
