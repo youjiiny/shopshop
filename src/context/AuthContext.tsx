@@ -11,20 +11,22 @@ import { AuthContextType, User } from 'types/auth';
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, SetUser] = useState<FirebaseUser | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const updateUser = (updated: { displayName: string }) => {
     updateUserName(updated);
-    SetUser({ ...user, displayName: updated.displayName } as User);
+    setUser({ ...user, displayName: updated.displayName } as User);
   };
   useEffect(() => {
     onUserStateChange((user: User) => {
-      SetUser(user);
+      setUser(user);
+      setLoading(false);
     });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

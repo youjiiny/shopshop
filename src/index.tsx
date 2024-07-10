@@ -83,11 +83,19 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <MyPage />,
+            element: (
+              <ProtectedRoute requireUser>
+                <MyPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: 'edit/info',
-            element: <MyPageSetting />,
+            element: (
+              <ProtectedRoute requireUser>
+                <MyPageSetting />
+              </ProtectedRoute>
+            ),
           },
         ],
       },

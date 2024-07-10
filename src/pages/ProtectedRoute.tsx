@@ -9,7 +9,9 @@ type Props = {
 };
 
 const ProtectedRoute = ({ children, requireAdmin, requireUser }: Props) => {
-  const { user } = useAuthContext() as AuthContextType;
+  const { loading, user } = useAuthContext() as AuthContextType;
+  if (loading) return null;
+
   if (
     (requireUser && !user) ||
     (requireAdmin && !user?.isAdmin) ||

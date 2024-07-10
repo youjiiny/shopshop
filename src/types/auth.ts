@@ -13,6 +13,7 @@ export type Address = {
 export type User = (FirebaseUser & { isAdmin?: boolean }) | null;
 export type AuthContextType = {
   user: User;
+  loading: boolean;
   updateUser: (updated: { displayName: string }) => void;
 };
 export type Receiver = {
