@@ -15,6 +15,7 @@ module.exports = {
         'price-stress': '#ff4800',
         'light-black': 'rgb(48, 48, 51)',
         'light-gray': '#5D5D5D',
+        'very-light-gray': '#e4e4e4',
       },
       width: {
         140: '35rem',
