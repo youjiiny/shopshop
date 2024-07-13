@@ -17,6 +17,7 @@ import CheckOut from 'pages/CheckOut';
 import MyPage from 'pages/MyPage';
 import MyPageLayout from 'pages/MyPageLayout';
 import MyPageSetting from 'pages/MyPageSetting';
+import OrderConfirm from 'pages/OrderConfirm';
 
 const router = createBrowserRouter([
   {
@@ -98,6 +99,14 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: '/order/:id',
+        element: (
+          <ProtectedRoute requireUser>
+            <OrderConfirm />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

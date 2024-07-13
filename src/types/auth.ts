@@ -23,7 +23,7 @@ export type Receiver = {
     part2: string;
     part3: string;
   };
-  phone2: {
+  phone2?: {
     part1: string;
     part2: string;
     part3: string;

@@ -9,6 +9,9 @@ import { useModalStore } from 'store/modal';
 import Modal from './Modal';
 import MissingInfoModal from './MissingInfoModal';
 import PaymentErrorModal from './PaymentErrorModal';
+import { useCartQuery } from 'hooks/useCartQuery';
+import { saveOrder } from 'api/cart';
+import { useNavigate } from 'react-router-dom';
 
 type Props = { receiver: Receiver; address: Address };
 
@@ -16,6 +19,8 @@ const PaymentInfo = ({ receiver, address }: Props) => {
   const { user } = useAuthContext() as AuthContextType;
   const { openModal } = useModalStore();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { deleteFromCartMutate } = useCartQuery();
   const products: CartItemType[] | undefined = queryClient.getQueryData([
     'myCart',
     user?.uid as string,
@@ -64,20 +69,31 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       console.log('결제를 위해 필수사항에 모두 동의해주세요.');
       return;
     }
+
     const { isSuccess, message } = await handlePayment({
       name: receiver.name as string,
       address: address as Address,
       phone,
     });
     if (isSuccess) {
-      alert('결제 성공!');
+      try {
+        deleteFromCartMutate({ uid: user?.uid as string });
+        const orderId = await saveOrder({
+          uid: user?.uid as string,
+          products: products as CartItemType[],
+          receiver,
+          address,
+          price: totalPrice!,
+        });
+        if (orderId) {
+          navigate(`/order/${orderId}`, { state: products });
+        }
+      } catch (err) {
+        console.error('error', err);
+      }
     } else {
       openModal(<PaymentErrorModal message={message} />);
     }
-
-    // 성공적으로 결제가 다 되면 카트 안은 비어져야함.
-    // 주문 기록은 DB에 저장함. => 나중에 주문조회로 조회할 예정
-    // 결제 실패 시, 모달로 실패한거 보여주기
   };
   const handleCheckAll = () => {
     if (!checked) {
