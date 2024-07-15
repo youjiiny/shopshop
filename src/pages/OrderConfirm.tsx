@@ -1,14 +1,25 @@
 import OrderProcess from 'components/OrderProcess';
 import OrderProducts from 'components/OrderProducts';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import { CartItemType } from 'types/product';
 
 const OrderConfirm = () => {
   const { id } = useParams();
-  const location = useLocation();
-  const products = location.state as CartItemType[];
-  console.log('products', products);
+  const { state } = useLocation();
+  const products = state as CartItemType[];
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!products) {
+      navigate('/');
+    }
+  }, []);
+  if (!products) {
+    return null;
+  }
+
   return (
     <div className='px-12 pt-12 pb-48'>
       <OrderProcess />
