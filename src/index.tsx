@@ -18,6 +18,7 @@ import MyPage from 'pages/MyPage';
 import MyPageLayout from 'pages/MyPageLayout';
 import MyPageSetting from 'pages/MyPageSetting';
 import OrderConfirm from 'pages/OrderConfirm';
+import OrderHistory from 'pages/OrderHistory';
 
 const router = createBrowserRouter([
   {
@@ -95,6 +96,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute requireUser>
                 <MyPageSetting />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'orders',
+            element: (
+              <ProtectedRoute requireUser>
+                <OrderHistory />
               </ProtectedRoute>
             ),
           },
