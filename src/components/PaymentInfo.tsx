@@ -10,7 +10,7 @@ import Modal from './Modal';
 import MissingInfoModal from './MissingInfoModal';
 import PaymentErrorModal from './PaymentErrorModal';
 import { useCartQuery } from 'hooks/useCartQuery';
-import { saveOrder } from 'api/cart';
+import { saveOrder } from 'api/order';
 import { useNavigate } from 'react-router-dom';
 
 type Props = { receiver: Receiver; address: Address };
@@ -66,7 +66,6 @@ const PaymentInfo = ({ receiver, address }: Props) => {
     }
     if (!checkedList.every((checked) => checked)) {
       openModal(<MissingInfoModal missing='checkbox' />);
-      console.log('결제를 위해 필수사항에 모두 동의해주세요.');
       return;
     }
 
