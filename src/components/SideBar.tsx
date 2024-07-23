@@ -6,7 +6,7 @@ const SideBar = () => {
   const { user } = useAuthContext() as AuthContextType;
 
   return (
-    <div className='w-56 h-60'>
+    <div className='w-40 lg:w-52'>
       <div className='mb-10'>
         <h3 className='text-2xl'>{user?.displayName}</h3>
       </div>

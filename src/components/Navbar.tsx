@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <header className='flex justify-between p-2'>
-      <Link to='/' className='flex text-3xl text-primary'>
+      <Link to='/' className='flex text-base sm:text-3xl text-primary'>
         <FaSlackHash />
         <h1>Shopshop</h1>
       </Link>

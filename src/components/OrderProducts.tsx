@@ -9,15 +9,15 @@ const OrderProducts = ({ products }: { products: CartItemType[] }) => {
       </h3>
       <div className='border-t-2 border-black'>
         <ul>
-          <li className='w-full table table-fixed text-sm border-b border-gray-950 leading-[60px]'>
+          <li className='w-full table table-fixed border-b border-gray-950 leading-[60px]'>
             <div className='w-8/12 relative table-cell text-center'>
-              <div className='flex items-center justify-between'>
+              <div className='flex items-center justify-between fonb'>
                 <span className='w-24'>상품</span>
                 <span className='flex-1'>상품 정보</span>
               </div>
             </div>
-            <div className='table-cell'>수량</div>
-            <div className='table-cell'>진행 상태</div>
+            <div className='table-cell font-bold'>수량</div>
+            <div className='table-cell font-bold'>진행 상태</div>
           </li>
           {products?.map((product) => {
             const { id, name, image, price, size, quantity } = product;
@@ -26,11 +26,13 @@ const OrderProducts = ({ products }: { products: CartItemType[] }) => {
                 <li className='w-full table table-fixed py-6 border-b last:border-b-2 border-b-black'>
                   <div className='w-8/12 relative table-cell text-center text-base md:text-xl'>
                     <Link to={`/products/${id}`} className='flex items-center'>
-                      <img
-                        src={image}
-                        className='w-24 h-24 mr-5 object-cover'
-                        alt='상품 이미지'
-                      />
+                      <div className='w-32 h-32'>
+                        <img
+                          src={image}
+                          className='w-full h-full mr-5 object-contain'
+                          alt='상품 이미지'
+                        />
+                      </div>
                       <div>
                         <h3 className='pt-6 pb-2'>{name}</h3>
                         <p className='text-price-stress font-bold'>
@@ -42,10 +44,10 @@ const OrderProducts = ({ products }: { products: CartItemType[] }) => {
                       </div>
                     </Link>
                   </div>
-                  <div className='table-cell align-middle text-sm md:text-base font-bold'>
+                  <div className='table-cell align-middle text-sm md:text-xl font-bold'>
                     {quantity}
                   </div>
-                  <div className='table-cell align-middle text-sm md:text-base font-bold'>
+                  <div className='table-cell align-middle text-sm md:text-2xl font-bold'>
                     결제 완료
                   </div>
                 </li>
