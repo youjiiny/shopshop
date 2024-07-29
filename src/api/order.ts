@@ -2,11 +2,11 @@ import { OrderList } from 'types/order';
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
+  where,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { CartItemType } from 'types/product';
@@ -73,11 +73,6 @@ export const getOrders: QueryFunction<
   const orderSnapshot = await getDocs(q);
   const orders = orderSnapshot.docs.map((doc) => {
     const data = doc.data();
-    console.log('data', data);
-    console.log(
-      'orderDate',
-      data.orderDate ? data.orderDate.toDate() : new Date(),
-    );
     return {
       ...doc.data(),
       orderDate: data.orderDate ? data.orderDate.toDate() : new Date(), ///data?.orderDate.toDate(),
@@ -87,4 +82,26 @@ export const getOrders: QueryFunction<
     throw new Error('No orders found!');
   }
   return orders;
+};
+
+export const getOrderDetail: QueryFunction<
+  OrderList,
+  [string, string, string, string]
+> = async ({ queryKey }) => {
+  const [_1, uid, _2, orderId] = queryKey;
+  const orderRef = collection(db, 'orders', uid, 'list');
+  const q = query(orderRef, where('orderId', '==', orderId));
+  const querySnapshot = await getDocs(q);
+  const order = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...doc.data(),
+      orderDate: data.orderDate ? data.orderDate.toDate() : new Date(), ///data?.orderDate.toDate(),
+    };
+  }) as OrderList[];
+
+  if (querySnapshot.empty) {
+    throw new Error('No matching order!');
+  }
+  return order[0] as OrderList;
 };
