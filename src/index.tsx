@@ -19,6 +19,7 @@ import MyPageLayout from 'pages/MyPageLayout';
 import MyPageSetting from 'pages/MyPageSetting';
 import OrderConfirm from 'pages/OrderConfirm';
 import OrderHistory from 'pages/OrderHistory';
+import OrderDetail from 'pages/OrderDetail';
 
 const router = createBrowserRouter([
   {
@@ -104,6 +105,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute requireUser>
                 <OrderHistory />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'order/:id',
+            element: (
+              <ProtectedRoute requireUser>
+                <OrderDetail />
               </ProtectedRoute>
             ),
           },
