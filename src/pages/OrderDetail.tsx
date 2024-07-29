@@ -47,23 +47,31 @@ const OrderDetail = () => {
 
         <table className='w-full table-fixed text-left border-t-4 border-black'>
           <tbody>
-            <tr>
-              <th className='border border-l-0 font-normal px-2 py-3'>
+            <tr className='border-b md:border-none'>
+              <th className='md:border md:border-l-0 font-normal px-2 py-3'>
                 주문자
               </th>
-              <td className='border border-r-0 px-3 py-1 font-bold'>
+              <td className='md:border md:border-r-0 px-3 py-1 font-bold'>
                 {order?.buyer.name}
               </td>
             </tr>
-            <tr>
-              <th className='border border-l-0 font-normal px-2 py-3'>
+            <tr className='border-b md:border-none'>
+              <th className='md:border md:border-l-0 font-normal px-2 py-3'>
                 연락처
               </th>
-              <td className='border px-3 py-1 font-bold'>
+              <td className='md:border px-3 py-1 font-bold'>
                 {order?.buyer.phone}
               </td>
-              <th className='border font-normal px-2 py-3'>연락처2</th>
-              <td className='border border-r-0 px-3 py-1 font-bold'>
+              <th className='hidden md:table-cell border font-normal px-2 py-3'>
+                연락처2
+              </th>
+              <td className='hidden md:table-cell border border-r-0 px-3 py-1 font-bold'>
+                {order?.buyer.phone2 ? order.buyer.phone2 : '-'}
+              </td>
+            </tr>
+            <tr className='border-b md:hidden'>
+              <th className='md:border font-normal px-2 py-3'>연락처2</th>
+              <td className='md:border md:border-r-0 px-3 py-1 font-bold'>
                 {order?.buyer.phone2 ? order.buyer.phone2 : '-'}
               </td>
             </tr>
@@ -74,26 +82,26 @@ const OrderDetail = () => {
         <div className='border-b-4 border-black'>
           <h4 className='text-2xl mb-2 leading-normal'>결제정보</h4>
         </div>
-        <div className='flex flex-col gap-2 sm:flex-row h-16 font-semibold border-b-0 sm:border-b'>
-          <div className='flex-1 flex items-center justify-between px-7'>
-            주문 금액{' '}
-            <span className='text-lg'>{`${order?.payment.price.toLocaleString()}원`}</span>
+        <div className='flex flex-col gap-2 h-auto py-4 md:flex-row md:h-20 md:py-0 md:gap-0 font-semibold border-b'>
+          <div className='flex items-center justify-between text-sm md:px-5 md:basis-[30%]'>
+            주문금액{' '}
+            <span className='lg:text-lg'>{`${order?.payment.price.toLocaleString()}원`}</span>
           </div>
-          <BsFillPlusCircleFill size={25} className='hidden sm:block my-auto' />
-          <div className='flex-1 flex items-center justify-between px-7'>
+          <BsFillPlusCircleFill size={24} className='hidden md:block my-auto' />
+          <div className=' flex items-center justify-between text-sm md:px-5 md:basis-[30%]'>
             배송비{' '}
-            <span className='text-lg'>{`${order?.payment.shipping.toLocaleString()}원`}</span>
+            <span className='lg:text-lg'>{`${order?.payment.shipping.toLocaleString()}원`}</span>
           </div>
-          <FaEquals size={25} className='hidden sm:block my-auto' />
-          <div className='flex-1 flex items-center justify-between px-7 text-lg text-price-stress'>
+          <FaEquals size={24} className='hidden md:block my-auto' />
+          <div className='flex items-center justify-between text-sm md:px-5 lg:text-lg text-price-stress md:basis-2/5'>
             결제금액{' '}
-            <span className='text-xl font-bold'>{`${order?.payment.total.toLocaleString()}원`}</span>
+            <span className='text-base lg:text-xl font-bold'>{`${order?.payment.total.toLocaleString()}원`}</span>
           </div>
         </div>
       </section>
       <section>
         <h4 className='text-2xl mb-2 leading-normal'>배송지정보</h4>
-        <table className='w-full table-fixed text-left border-t-4 border-black'>
+        <table className='w-full table-fixed text-left border-t-4 border-black '>
           <colgroup>
             <col width={140} />
             <col />
@@ -101,44 +109,61 @@ const OrderDetail = () => {
             <col />
           </colgroup>
           <tbody>
-            <tr>
+            <tr className='border-b md:border-none'>
               <th
-                className='border border-l-0 font-normal px-2 py-3'
+                className='md:border md:border-l-0 font-normal px-2 py-3'
                 scope='row'
               >
                 받는사람
               </th>
-              <td className='border border-r-0 px-3 py-1 font-bold' colSpan={3}>
+              <td
+                className='md:border md:border-r-0 px-3 py-1 font-bold'
+                colSpan={8}
+              >
                 {order?.buyer.name}
               </td>
             </tr>
-            <tr>
+            <tr className='border-b md:border-none'>
               <th
-                className='border border-l-0 font-normal px-2 py-3'
+                className='md:border md:border-l-0 font-normal px-2 py-3'
                 scope='row'
               >
                 연락처
               </th>
-              <td className='border px-3 py-1 font-bold'>
+              <td className='md:border px-3 py-1 font-bold' colSpan={3}>
                 {order?.buyer.phone}
               </td>
-              <th className='border font-normal px-2 py-3' scope='row'>
+              <th
+                className='hidden md:table-cell border font-normal px-2 py-3'
+                scope='row'
+              >
                 연락처2
               </th>
-              <td className='border border-r-0 px-3 py-1 font-bold'>
+              <td
+                className='hidden md:table-cell border border-r-0 px-3 py-1 font-bold'
+                colSpan={3}
+              >
                 {order?.buyer.phone2 ? order.buyer.phone2 : '-'}
               </td>
             </tr>
-            <tr>
+            <tr className='border-b md:hidden'>
+              <th className='md:border font-normal px-2 py-3' scope='row'>
+                연락처2
+              </th>
+              <td className='md:border md:border-r-0 px-3 py-1 font-bold'>
+                {order?.buyer.phone2 ? order.buyer.phone2 : '-'}
+              </td>
+            </tr>
+            <tr className='border-b md:border-none'>
               <th
-                className='border border-l-0 font-normal px-2 py-3'
+                className='md:border md:border-l-0 font-normal px-2 py-3'
                 scope='row'
               >
                 주소
               </th>
               <td
-                className='w-full border border-r-0 px-3 py-1 font-bold'
-                colSpan={3}
+                className='md:border md:border-r-0 px-3 py-1 font-bold'
+                colSpan={8}
               >
                 {order?.buyer.address.roadAddress}
               </td>
