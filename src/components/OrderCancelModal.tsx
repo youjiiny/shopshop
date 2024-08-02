@@ -1,22 +1,14 @@
+import { handleRefund } from 'lib/payment';
 import { useModalStore } from 'store/modal';
 
 const OrderCancelModal = ({ orderId }: { orderId: string }) => {
   const { closeModal } = useModalStore();
   const handleCancelPay = async () => {
-    const url = import.meta.env.VITE_PORTONE_REFUND_URL;
-    try {
-      const response = await fetch(url, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ merchant_uid: orderId }),
-      });
-      const result = await response.json();
-      console.log('result', result);
-    } catch (error) {
-      console.error('Error processing refund:', error);
-      alert('환불 처리 중 오류가 발생했습니다.');
+    const { isSuccess, message } = await handleRefund(orderId);
+    if (isSuccess) {
+      alert('환불 취소!');
+    } else {
+      alert(message);
     }
     closeModal();
   };
