@@ -13,22 +13,16 @@ import { CartItemType } from 'types/product';
 import { Address, Receiver } from 'types/auth';
 import { QueryFunction } from '@tanstack/react-query';
 
-const createOrderId = () => {
-  const year = new Date().getFullYear();
-  const month = new Date().getMonth() + 1;
-  const date = new Date().getDate();
-  const time = new Date().getTime();
-  return `ORD${year}${month}${date}-${time}`;
-};
-
 export const saveOrder = async ({
   uid,
+  merchant_uid,
   products,
   receiver,
   address,
   price,
 }: {
   uid: string;
+  merchant_uid: string;
   products: CartItemType[];
   receiver: Receiver;
   address: Address;
@@ -37,7 +31,7 @@ export const saveOrder = async ({
   const { phone1, phone2 } = receiver;
   const shipping = price >= 70000 ? 0 : 3000;
   const order = {
-    orderId: createOrderId(),
+    orderId: merchant_uid,
     orderDate: new Date(),
     products,
     payment: {

@@ -69,7 +69,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       return;
     }
 
-    const { isSuccess, message } = await handlePayment({
+    const { isSuccess, message, merchant_uid } = await handlePayment({
       name: receiver.name as string,
       address: address as Address,
       phone,
@@ -79,6 +79,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
         deleteFromCartMutate({ uid: user?.uid as string });
         const orderId = await saveOrder({
           uid: user?.uid as string,
+          merchant_uid: merchant_uid as string,
           products: products as CartItemType[],
           receiver,
           address,
