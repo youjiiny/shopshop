@@ -1,8 +1,13 @@
 import { OrderList as OrderListType } from 'types/order';
+import OrderCancelModal from './OrderCancelModal';
+import { useModalStore } from 'store/modal';
+import Modal from './Modal';
+import ArrowSvg from 'assets/svg/ArrowSvg';
 import { Link } from 'react-router-dom';
 
 const OrderList = ({ order }: { order: OrderListType }) => {
   const { orderId, orderDate, products, payment } = order;
+  const { openModal } = useModalStore();
 
   return (
     <li className='sm:border-t-2 border-black'>
@@ -18,6 +23,13 @@ const OrderList = ({ order }: { order: OrderListType }) => {
             주문 번호 <b>{orderId}</b>
           </Link>
         </div>
+        <button
+          className='flex items-center gap-1 text-gray-600'
+          onClick={() => openModal(<OrderCancelModal orderId={orderId} />)}
+        >
+          주문 취소
+          <ArrowSvg width={14} height={14} />
+        </button>
       </div>
       <div>
         <ul className='sm:py-4 md:pt-8 pb-2'>
@@ -73,6 +85,7 @@ const OrderList = ({ order }: { order: OrderListType }) => {
           })}
         </ul>
       </div>
+      <Modal />
     </li>
   );
 };
