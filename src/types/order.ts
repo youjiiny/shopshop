@@ -18,4 +18,5 @@ export type OrderList = {
   orderDate: Date;
   payment: Payment;
   products: CartItemType[];
+  status: 'completed' | 'cancelled';
 };

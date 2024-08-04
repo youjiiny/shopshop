@@ -49,6 +49,7 @@ export const saveOrder = async ({
           phone2: `${phone2.part1}-${phone2.part2}-${phone2.part3}`,
         }),
     },
+    status: 'completed',
   };
   const orderRef = doc(collection(db, 'orders', uid, 'list'));
   await setDoc(orderRef, order);

@@ -70,7 +70,7 @@ export const handleRefund = async (orderId: string) => {
     if (code === 0) {
       resolve({
         isSuccess: true,
-        message: '결제 취소 성공',
+        message: '주문 취소가 완료되었습니다.',
       });
     } else {
       resolve({ isSuccess: false, message: message as string });

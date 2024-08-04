@@ -6,7 +6,7 @@ import ArrowSvg from 'assets/svg/ArrowSvg';
 import { Link } from 'react-router-dom';
 
 const OrderList = ({ order }: { order: OrderListType }) => {
-  const { orderId, orderDate, products, payment } = order;
+  const { orderId, orderDate, products, payment, status } = order;
   const { openModal } = useModalStore();
 
   return (
@@ -23,13 +23,15 @@ const OrderList = ({ order }: { order: OrderListType }) => {
             주문 번호 <b>{orderId}</b>
           </Link>
         </div>
-        <button
-          className='flex items-center gap-1 text-gray-600'
-          onClick={() => openModal(<OrderCancelModal orderId={orderId} />)}
-        >
-          주문 취소
-          <ArrowSvg width={14} height={14} />
-        </button>
+        {status === 'completed' && (
+          <button
+            className='flex items-center gap-1 text-gray-600'
+            onClick={() => openModal(<OrderCancelModal orderId={orderId} />)}
+          >
+            주문 취소
+            <ArrowSvg width={14} height={14} />
+          </button>
+        )}
       </div>
       <div>
         <ul className='sm:py-4 md:pt-8 pb-2'>
@@ -43,7 +45,7 @@ const OrderList = ({ order }: { order: OrderListType }) => {
                 <div className='mb-4 sm:flex-1'>
                   <div className='inline-flex items-center p-1 mb-2 border rounded-sm bg-amber-100 sm:hidden'>
                     <span className='text-xs lg:text-xl font-bold'>
-                      구매완료
+                      {status === 'completed' ? '구매완료' : '취소완료'}
                     </span>
                   </div>
                   <Link to={`/mypage/order/${orderId}`} className='flex'>
@@ -72,7 +74,9 @@ const OrderList = ({ order }: { order: OrderListType }) => {
                   </span>
                 </div>
                 <div className='hidden sm:flex items-center justify-center flex-1'>
-                  <span className='text-lg lg:text-xl font-bold'>결제완료</span>
+                  <span className='text-lg lg:text-xl font-bold'>
+                    {status === 'completed' ? '구매완료' : '취소완료'}
+                  </span>
                 </div>
                 <div className='text-sm text-center p-3 border-y border-b-black sm:hidden'>
                   <span>배송비 : </span>{' '}
