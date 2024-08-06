@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProductCountProvider } from 'context/ProductCountContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TabProvider } from 'context/TabContext';
+import Modal from 'components/Modal';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +29,7 @@ function App() {
         <TabProvider>
           <ProductCountProvider>
             <Outlet />
+            <Modal />
             <ToastContainer />
           </ProductCountProvider>
         </TabProvider>

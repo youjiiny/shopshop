@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { handlePayment } from 'lib/payment';
 import { PHONE_REGEX } from 'utils/checkEffectiveness';
 import { useModalStore } from 'store/modal';
-import Modal from './Modal';
 import MissingInfoModal from './MissingInfoModal';
 import PaymentErrorModal from './PaymentErrorModal';
 import { useCartQuery } from 'hooks/useCartQuery';
@@ -217,7 +216,6 @@ const PaymentInfo = ({ receiver, address }: Props) => {
           </button>
         </div>
       </div>
-      <Modal />
     </section>
   );
 };

@@ -20,7 +20,7 @@ const Modal = () => {
         </div>
       </div>
     </div>,
-    document.getElementById('modal')!,
+    document.getElementById('modal') as HTMLElement,
   );
 };
 
