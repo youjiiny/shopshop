@@ -1,13 +1,48 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateOrder } from 'api/order';
+import { useAuthContext } from 'context/AuthContext';
 import { handleRefund } from 'lib/payment';
 import { useState } from 'react';
 import { useModalStore } from 'store/modal';
+import { AuthContextType } from 'types/auth';
+import { OrderList } from 'types/order';
 
 const OrderCancelModal = ({ orderId }: { orderId: string }) => {
-  const [message, setMessage] = useState('');
+  const { user } = useAuthContext() as AuthContextType;
   const { closeModal } = useModalStore();
+  const [message, setMessage] = useState('');
+  const queryClient = useQueryClient();
+  const cancelOrder = useMutation({
+    mutationFn: updateOrder,
+    onSuccess: async () => {
+      const queryCache = queryClient.getQueryCache();
+      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      queryKeys.forEach((queryKey) => {
+        if ((queryKey[0] === 'mypage', queryKey[2] === 'orders')) {
+          const value: OrderList[] | undefined =
+            queryClient.getQueryData(queryKey);
+          if (value) {
+            const order = value.find((v) => v.orderId === orderId);
+            if (order) {
+              const index = value.findIndex((v) => v.orderId === orderId);
+              const shallow = [...value];
+              shallow[index] = {
+                ...shallow[index],
+                status: 'cancelled',
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          }
+        }
+      });
+    },
+  });
   const handleCancelPay = async () => {
-    const { message } = await handleRefund(orderId);
+    const { isSuccess, message } = await handleRefund(orderId);
     setMessage(message);
+    if (isSuccess) {
+      cancelOrder.mutate({ uid: user?.uid as string, orderId });
+    }
   };
   return (
     <div className='flex flex-col gap-5 text-center leading-6'>

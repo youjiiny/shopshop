@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -99,4 +100,20 @@ export const getOrderDetail: QueryFunction<
     throw new Error('No matching order!');
   }
   return order[0] as OrderList;
+};
+
+export const updateOrder = async ({
+  uid,
+  orderId,
+}: {
+  uid: string;
+  orderId: string;
+}) => {
+  const orderRef = collection(db, 'orders', uid, 'list');
+  const q = query(orderRef, where('orderId', '==', orderId));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const docRef = querySnapshot.docs[0].ref;
+    await updateDoc(docRef, { status: 'cancelled' });
+  }
 };
