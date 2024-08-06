@@ -1,7 +1,6 @@
 import { OrderList as OrderListType } from 'types/order';
 import OrderCancelModal from './OrderCancelModal';
 import { useModalStore } from 'store/modal';
-import Modal from './Modal';
 import ArrowSvg from 'assets/svg/ArrowSvg';
 import { Link } from 'react-router-dom';
 
@@ -89,7 +88,6 @@ const OrderList = ({ order }: { order: OrderListType }) => {
           })}
         </ul>
       </div>
-      <Modal />
     </li>
   );
 };

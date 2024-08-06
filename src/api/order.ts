@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -79,6 +80,30 @@ export const getOrders: QueryFunction<
   return orders;
 };
 
+export const getCancelOrders: QueryFunction<
+  OrderList[],
+  [string, string, string, string]
+> = async ({ queryKey }) => {
+  const [_, uid, _2, cancelled] = queryKey;
+  const q = query(
+    collection(db, `orders/${uid}/list`),
+    where('status', '==', cancelled),
+    orderBy('orderDate', 'desc'),
+  );
+  const orderSnapshot = await getDocs(q);
+  const orders = orderSnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...doc.data(),
+      orderDate: data.orderDate ? data.orderDate.toDate() : new Date(),
+    };
+  }) as OrderList[];
+  if (!orders.length) {
+    throw new Error('No orders found!');
+  }
+  return orders;
+};
+
 export const getOrderDetail: QueryFunction<
   OrderList,
   [string, string, string, string]
@@ -99,4 +124,20 @@ export const getOrderDetail: QueryFunction<
     throw new Error('No matching order!');
   }
   return order[0] as OrderList;
+};
+
+export const updateOrder = async ({
+  uid,
+  orderId,
+}: {
+  uid: string;
+  orderId: string;
+}) => {
+  const orderRef = collection(db, 'orders', uid, 'list');
+  const q = query(orderRef, where('orderId', '==', orderId));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const docRef = querySnapshot.docs[0].ref;
+    await updateDoc(docRef, { status: 'cancelled' });
+  }
 };
