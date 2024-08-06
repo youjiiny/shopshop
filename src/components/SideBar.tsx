@@ -15,7 +15,9 @@ const SideBar = () => {
         <li>
           <Link to='/mypage/orders'>주문배송조회</Link>
         </li>
-        <li>취소/교환/반품 내역</li>
+        <li>
+          <Link to='/mypage/cancel-orders'>취소/교환/반품 내역</Link>
+        </li>
       </ul>
       <h4 className='font-bold mb-2'>나의 계정 설정</h4>
       <ul className='text-sm text-light-gray'>

@@ -20,6 +20,7 @@ import MyPageSetting from 'pages/MyPageSetting';
 import OrderConfirm from 'pages/OrderConfirm';
 import OrderHistory from 'pages/OrderHistory';
 import OrderDetail from 'pages/OrderDetail';
+import CancelOrderHistory from 'pages/CancelOrderHistory';
 
 const router = createBrowserRouter([
   {
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute requireUser>
                 <OrderHistory />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'cancel-orders',
+            element: (
+              <ProtectedRoute requireUser>
+                <CancelOrderHistory />
               </ProtectedRoute>
             ),
           },

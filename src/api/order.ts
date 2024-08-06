@@ -80,6 +80,30 @@ export const getOrders: QueryFunction<
   return orders;
 };
 
+export const getCancelOrders: QueryFunction<
+  OrderList[],
+  [string, string, string, string]
+> = async ({ queryKey }) => {
+  const [_, uid, _2, cancelled] = queryKey;
+  const q = query(
+    collection(db, `orders/${uid}/list`),
+    where('status', '==', cancelled),
+    orderBy('orderDate', 'desc'),
+  );
+  const orderSnapshot = await getDocs(q);
+  const orders = orderSnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...doc.data(),
+      orderDate: data.orderDate ? data.orderDate.toDate() : new Date(),
+    };
+  }) as OrderList[];
+  if (!orders.length) {
+    throw new Error('No orders found!');
+  }
+  return orders;
+};
+
 export const getOrderDetail: QueryFunction<
   OrderList,
   [string, string, string, string]
