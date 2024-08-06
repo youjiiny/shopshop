@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Fragment } from 'react/jsx-runtime';
 import { CartItemType } from 'types/product';
 
 const OrderProducts = ({ products }: { products: CartItemType[] }) => {
@@ -19,10 +20,10 @@ const OrderProducts = ({ products }: { products: CartItemType[] }) => {
             <div className='table-cell font-bold'>수량</div>
             <div className='table-cell font-bold'>진행 상태</div>
           </li>
-          {products?.map((product) => {
+          {products?.map((product, i) => {
             const { id, name, image, price, size, quantity } = product;
             return (
-              <>
+              <Fragment key={i}>
                 <li className='w-full table table-fixed py-6 border-b last:border-b-2 border-b-black'>
                   <div className='w-8/12 relative table-cell text-center text-base md:text-xl'>
                     <Link to={`/products/${id}`} className='flex items-center'>
@@ -51,7 +52,7 @@ const OrderProducts = ({ products }: { products: CartItemType[] }) => {
                     결제 완료
                   </div>
                 </li>
-              </>
+              </Fragment>
             );
           })}
         </ul>
