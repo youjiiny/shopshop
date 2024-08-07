@@ -1,25 +1,8 @@
-import { DefaultError, useQuery } from '@tanstack/react-query';
-import { getOrders } from 'api/order';
 import OrderList from 'components/OrderList';
-import { useAuthContext } from 'context/AuthContext';
-import { AuthContextType } from 'types/auth';
-import { OrderList as OrderListType } from 'types/order';
+import { useOrderQuery } from 'hooks/useOrderQuery';
 
 const OrderHistory = () => {
-  const { user } = useAuthContext() as AuthContextType;
-  const {
-    isLoading,
-    data: orders,
-    error,
-  } = useQuery<
-    OrderListType[],
-    DefaultError,
-    OrderListType[],
-    [string, string, string]
-  >({
-    queryKey: ['mypage', user?.uid as string, 'orders'],
-    queryFn: getOrders,
-  });
+  const { isLoading, orders } = useOrderQuery();
   if (isLoading) return <p>Loading...</p>;
 
   return (
