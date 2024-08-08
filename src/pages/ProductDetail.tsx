@@ -13,7 +13,6 @@ import { IoMdHeartEmpty } from 'react-icons/io';
 import { addCart } from 'api/cart';
 import { useAuthContext } from 'context/AuthContext';
 import { useModalStore } from 'store/modal';
-import Modal from 'components/Modal';
 import AddToCartModal from 'components/AddToCartModal';
 import { AuthContextType } from 'types/auth';
 
@@ -137,7 +136,6 @@ const ProductDetail = () => {
           장바구니 담기
         </button>
       </div>
-      <Modal />
     </div>
   );
 };

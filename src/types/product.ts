@@ -14,6 +14,7 @@ export type GetProductType = {
   category: string;
   description: string;
   size: string[];
+  heartCount: number;
 };
 
 export type ProductSize = {
