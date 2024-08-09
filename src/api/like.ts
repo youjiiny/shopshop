@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   query,
@@ -16,6 +17,18 @@ export const getLikedProduct = async ({ uid }: { uid: string }) => {
     (doc) => doc.data().productId,
   ) as string[];
   return likeIds;
+};
+
+export const isLikedProduct = async ({
+  uid,
+  id,
+}: {
+  uid: string;
+  id: string;
+}) => {
+  const heartRef = doc(db, 'productHeart', `${uid}-${id}`);
+  const heartDoc = await getDoc(heartRef);
+  return heartDoc.exists();
 };
 
 export const likeProduct = async ({

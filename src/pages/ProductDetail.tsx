@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProudctDetail } from 'api/product';
 import { SelectedProduct } from 'components/SelectedProduct';
 import { useProductCountContext } from 'context/ProductCountContext';
@@ -9,12 +9,15 @@ import {
   GetProductType,
   ProductCountContextType,
 } from 'types/product';
-import { IoMdHeartEmpty } from 'react-icons/io';
-import { addCart } from 'api/cart';
 import { useAuthContext } from 'context/AuthContext';
 import { useModalStore } from 'store/modal';
 import AddToCartModal from 'components/AddToCartModal';
 import { AuthContextType } from 'types/auth';
+import { useCartQuery } from 'hooks/useCartQuery';
+import HeartSvg from 'assets/svg/HeartSvg';
+import { useEffect, useState } from 'react';
+import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
+import { isLikedProduct } from 'api/like';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +30,7 @@ const ProductDetail = () => {
     queryFn: () => getProudctDetail(id as string),
   });
   const { user } = useAuthContext() as AuthContextType;
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { openModal } = useModalStore();
   const {
@@ -34,19 +38,18 @@ const ProductDetail = () => {
     selected,
     setPrice,
     selectProduct,
-  } = useProductCountContext()! as ProductCountContextType;
+  } = useProductCountContext() as ProductCountContextType;
+  const { addToCartMutate } = useCartQuery();
+  const { likeMutate, unlikeMutate } = useLikeProductQuery(id!);
 
-  const addToCartMutation = useMutation({
-    mutationFn: addCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myCart', user!.uid] });
-    },
-  });
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>{error.message}</p>;
-
-  const { name, image, description, price, size } = product!;
+  const handleLike = () => {
+    if (isLiked) {
+      unlikeMutate({ uid: user?.uid as string, productId: id as string });
+    } else {
+      likeMutate({ uid: user?.uid as string, productId: id as string });
+    }
+    setIsLiked((prev) => !prev);
+  };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -77,19 +80,36 @@ const ProductDetail = () => {
       const filteredOption = Object.fromEntries(options);
       if (!options.length) return; // 모두 장바구니에 있으면 스킵
 
-      addToCartMutation.mutate({
-        uid: user!.uid,
+      addToCartMutate({
+        uid: user?.uid as string,
         product: addProduct,
         option: filteredOption,
       });
     } else {
-      addToCartMutation.mutate({
+      addToCartMutate({
         uid: user?.uid as string,
         product: addProduct,
         option: selected,
       });
     }
   };
+  const checkIsLiked = async () => {
+    const liked = await isLikedProduct({
+      uid: user?.uid as string,
+      id: id as string,
+    });
+    setIsLiked(liked);
+  };
+
+  useEffect(() => {
+    if (user?.uid) {
+      checkIsLiked();
+    }
+  }, [user?.uid]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
+  const { name, image, description, price, size } = product as GetProductType;
 
   return (
     <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
@@ -101,8 +121,8 @@ const ProductDetail = () => {
       <div className='w-full basis-1/2 flex flex-col gap-2 pl-10'>
         <div className='flex justify-between'>
           <h3 className='text-xl font-semibold'>{name}</h3>
-          <button>
-            <IoMdHeartEmpty size={26} />
+          <button onClick={handleLike}>
+            <HeartSvg isLiked={isLiked} size={'26'} />
           </button>
         </div>
         <div className='border-b-2 pb-2'>
