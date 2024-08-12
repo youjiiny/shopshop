@@ -30,7 +30,8 @@ code {
     monospace;
 }
 
-input {
+input,
+textarea {
   @apply outline-none border border-gray-300;
 }
 
