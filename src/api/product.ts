@@ -8,16 +8,18 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 import type { GetProductType, AddProductType } from 'types/product';
-import { v4 as uuidv4 } from 'uuid';
 
-export const addProduct = async (product: AddProductType, image: string) => {
-  const id = uuidv4();
-  await setDoc(doc(db, 'products', id), {
+export const addProduct = async (
+  product: AddProductType,
+  mainImg: string,
+  subImg: string[],
+) => {
+  await setDoc(doc(db, 'products', product.id), {
     ...product,
-    id,
     price: Number(product.price),
     size: product.size.split(','),
-    image,
+    mainImg,
+    subImg,
   });
 };
 
