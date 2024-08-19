@@ -1,3 +1,4 @@
+import { uploadProductImg } from 'api/aws';
 import { addProduct } from 'api/product';
 import { uploadImage } from 'api/uploader';
 import MainIMageUploader from 'components/MainImageUploader';
@@ -27,6 +28,12 @@ const NewProduct = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsUploading(true);
+    //const id = await addProduct
+    const result = await uploadProductImg({
+      mainImg: mainImage as File,
+      subImg: subImages as File[],
+    });
+    console.log('result', result);
     //const imageUrl = (await uploadImage(file!)) as string;
     //await addProduct(product, imageUrl);
     toast.success('제품이 추가되었습니다.');
