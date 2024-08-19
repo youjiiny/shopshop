@@ -109,54 +109,70 @@ const ProductDetail = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
-  const { name, image, description, price, size } = product as GetProductType;
+  const { name, mainImg, subImg, image, description, price, size } =
+    product as GetProductType;
 
   return (
-    <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
-      <img
-        className='w-full basis-1/2 md:w-140 md:h-140'
-        src={image}
-        alt={'상품 이미지'}
-      />
-      <div className='w-full basis-1/2 flex flex-col gap-2 pl-10'>
-        <div className='flex justify-between'>
-          <h3 className='text-xl font-semibold'>{name}</h3>
-          <button onClick={handleLike}>
-            <HeartSvg isLiked={isLiked} size={'26'} />
+    <>
+      <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
+        <img
+          className='w-full basis-1/2 md:w-140 md:h-140'
+          src={
+            mainImg
+              ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
+              : image
+          }
+          alt={'상품 이미지'}
+        />
+        <div className='w-full basis-1/2 flex flex-col gap-2 pl-10'>
+          <div className='flex justify-between'>
+            <h3 className='text-xl font-semibold'>{name}</h3>
+            <button onClick={handleLike}>
+              <HeartSvg isLiked={isLiked} size={'26'} />
+            </button>
+          </div>
+          <div className='border-b-2 pb-2'>
+            <span className='text-xl font-semibold'>
+              {price.toLocaleString()}
+            </span>
+            <span className='font-bold'>원</span>
+          </div>
+
+          <p>{description}</p>
+          <select
+            className='h-8 border border-gray-400 outline-none cursor-pointer'
+            onChange={handleSelect}
+            //defaultValue={''}
+            value={''}
+          >
+            <option disabled value={''}>
+              [사이즈]를 선택하세요.
+            </option>
+            {size?.map((s, i) => (
+              <option key={i} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          {selected && <SelectedProduct option={option} />}
+          <button
+            className='h-12 mt-4 bg-primary text-white hover:bg-price-stress shadow-md'
+            onClick={handleAdd}
+          >
+            장바구니 담기
           </button>
         </div>
-        <div className='border-b-2 pb-2'>
-          <span className='text-xl font-semibold'>
-            {price.toLocaleString()}
-          </span>
-          <span className='font-bold'>원</span>
-        </div>
-
-        <p>{description}</p>
-        <select
-          className='h-8 border border-gray-400 outline-none cursor-pointer'
-          onChange={handleSelect}
-          //defaultValue={''}
-          value={''}
-        >
-          <option disabled value={''}>
-            [사이즈]를 선택하세요.
-          </option>
-          {size?.map((s, i) => (
-            <option key={i} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        {selected && <SelectedProduct option={option} />}
-        <button
-          className='h-12 mt-4 bg-primary text-white hover:bg-price-stress shadow-md'
-          onClick={handleAdd}
-        >
-          장바구니 담기
-        </button>
       </div>
-    </div>
+      <div className='flex flex-col gap-10'>
+        {subImg?.map((img, i) => (
+          <img
+            className='w-3/5'
+            src={`${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/${img}`}
+            key={i}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

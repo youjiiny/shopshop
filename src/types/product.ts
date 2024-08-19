@@ -1,4 +1,5 @@
 export type AddProductType = {
+  id: string;
   name: string;
   price: number;
   category: string;
@@ -9,7 +10,9 @@ export type AddProductType = {
 export type GetProductType = {
   id: string;
   name: string;
-  image: string;
+  image?: string;
+  mainImg: string;
+  subImg: string[];
   price: number;
   category: string;
   description: string;

@@ -1,13 +1,14 @@
+import { uploadProductImg } from 'api/aws';
 import { addProduct } from 'api/product';
-import { uploadImage } from 'api/uploader';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { AddProductType } from 'types/product';
+import { v4 as uuidv4 } from 'uuid';
 
 const NewProduct = () => {
-  const [product, setProduct] = useState<AddProductType>({
+  const [product, setProduct] = useState<Omit<AddProductType, 'id'>>({
     name: '',
     price: 0,
     category: '',
@@ -27,8 +28,14 @@ const NewProduct = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsUploading(true);
-    //const imageUrl = (await uploadImage(file!)) as string;
-    //await addProduct(product, imageUrl);
+    //const id = await addProduct
+    const id = uuidv4();
+    const { mainImg, subImg } = await uploadProductImg({
+      id,
+      mainImage: mainImage as File,
+      subImage: subImages as File[],
+    });
+    await addProduct({ ...product, id }, mainImg, subImg);
     toast.success('제품이 추가되었습니다.');
     setIsUploading(false);
   };

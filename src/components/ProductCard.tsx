@@ -9,7 +9,7 @@ import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
 type Props = { product: GetProductType; likedProducts: string[] };
 
 const ProductCard = ({ product, likedProducts }: Props) => {
-  const { id, name, image, price, heartCount } = product;
+  const { id, name, mainImg, subImg, image, price, heartCount } = product;
   const { user } = useAuthContext() as AuthContextType;
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const { likeMutate, unlikeMutate } = useLikeProductQuery(id);
@@ -36,7 +36,11 @@ const ProductCard = ({ product, likedProducts }: Props) => {
       <div>
         <img
           className='w-96 h-96 md:w-72 md:h-72'
-          src={image}
+          src={
+            mainImg
+              ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
+              : image
+          }
           alt='product image'
         />
       </div>
@@ -45,7 +49,7 @@ const ProductCard = ({ product, likedProducts }: Props) => {
         <p className='font-semibold text-price'>{`${price.toLocaleString()}원`}</p>
         <button className='flex items-center' onClick={handleLike}>
           <HeartSvg isLiked={isLiked} />
-          <p className='m-1'>{heartCount}</p>
+          <p className='m-1'>{heartCount || 0}</p>
         </button>
       </div>
     </li>
