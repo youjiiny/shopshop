@@ -1,7 +1,10 @@
 import AWS from 'aws-sdk';
 import S3 from 'aws-sdk/clients/s3';
 
-// AWS 설정
+type DeleteObject = {
+  Key: string;
+};
+
 AWS.config.update({
   region: 'ap-northeast-2',
   accessKeyId: import.meta.env.VITE_S3_ACCESS_KEY_ID,
@@ -42,4 +45,24 @@ export const uploadProductImg = async ({
 
   const subImgs = subImage.map((img) => img.name);
   return { mainImg: mainImage.name, subImg: subImgs };
+};
+
+export const deleteProductImg = async (
+  id: string,
+  mainImg: string,
+  subImg: string[],
+) => {
+  try {
+    const params = {
+      Bucket: import.meta.env.VITE_S3_BUCKET_NAME,
+      Delete: { Objects: [] as DeleteObject[] },
+    };
+    subImg.forEach((img) =>
+      params.Delete.Objects.push({ Key: `products/${id}/${img}` }),
+    );
+    params.Delete.Objects.push({ Key: `products/${id}/represent/${mainImg}` });
+    await s3.deleteObjects(params).promise();
+  } catch (err) {
+    console.error('err', err);
+  }
 };

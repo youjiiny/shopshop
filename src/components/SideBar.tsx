@@ -4,6 +4,27 @@ import { AuthContextType } from 'types/auth';
 
 const SideBar = () => {
   const { user } = useAuthContext() as AuthContextType;
+  if (user?.isAdmin) {
+    return (
+      <div className='w-40 lg:w-52'>
+        <div className='mb-10'>
+          <h3 className='text-2xl'>{user?.displayName}</h3>
+        </div>
+        <h4 className='font-bold mb-2'>운영관리</h4>
+        <ul className='text-sm text-light-gray mb-8'>
+          <li>
+            <Link to='/admin/product'>상품관리</Link>
+          </li>
+        </ul>
+        <h4 className='font-bold mb-2'>나의 계정 설정</h4>
+        <ul className='text-sm text-light-gray'>
+          <li>
+            <Link to='/mypage/edit/info'>회원정보 수정</Link>
+          </li>
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div className='w-40 lg:w-52'>

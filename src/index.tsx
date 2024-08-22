@@ -21,6 +21,7 @@ import OrderConfirm from 'pages/OrderConfirm';
 import OrderHistory from 'pages/OrderHistory';
 import OrderDetail from 'pages/OrderDetail';
 import CancelOrderHistory from 'pages/CancelOrderHistory';
+import ProductManagement from 'components/ProductManagement';
 
 const router = createBrowserRouter([
   {
@@ -132,6 +133,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requireUser>
             <OrderConfirm />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/product',
+        element: (
+          <ProtectedRoute requireUser requireAdmin>
+            <ProductManagement />
           </ProtectedRoute>
         ),
       },

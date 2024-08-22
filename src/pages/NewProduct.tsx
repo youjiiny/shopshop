@@ -3,6 +3,7 @@ import { addProduct } from 'api/product';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AddProductType } from 'types/product';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +19,7 @@ const NewProduct = () => {
   const [mainImage, setMainImage] = useState<File | null>();
   const [subImages, setSubImages] = useState<File[] | null>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -38,6 +40,7 @@ const NewProduct = () => {
     await addProduct({ ...product, id }, mainImg, subImg);
     toast.success('제품이 추가되었습니다.');
     setIsUploading(false);
+    navigate('/');
   };
   const isValid = () => {
     return mainImage &&
