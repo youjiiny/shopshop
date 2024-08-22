@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -38,4 +39,8 @@ export const getProudctDetail = async (id: string) => {
     doc.data(),
   )[0] as GetProductType;
   return product;
+};
+
+export const deleteProduct = async (id: string) => {
+  await deleteDoc(doc(db, 'products', id));
 };
