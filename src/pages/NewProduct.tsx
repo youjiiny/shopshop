@@ -2,9 +2,11 @@ import { uploadProductImg } from 'api/aws';
 import { addProduct } from 'api/product';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
+import { useAuthContext } from 'context/AuthContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { AuthContextType } from 'types/auth';
 import { AddProductType } from 'types/product';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,6 +21,7 @@ const NewProduct = () => {
   const [mainImage, setMainImage] = useState<File | null>();
   const [subImages, setSubImages] = useState<File[] | null>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const { user } = useAuthContext() as AuthContextType;
   const navigate = useNavigate();
 
   const handleChange = (
@@ -37,14 +40,15 @@ const NewProduct = () => {
       mainImage: mainImage as File,
       subImage: subImages as File[],
     });
-    await addProduct({ ...product, id }, mainImg, subImg);
+    await addProduct({ ...product, id }, mainImg, subImg, user?.uid as string);
     toast.success('제품이 추가되었습니다.');
     setIsUploading(false);
     navigate('/');
   };
   const isValid = () => {
     return mainImage &&
-      //Array.from(subImages!).length > 0 &&
+      subImages &&
+      subImages?.length > 0 &&
       product.name.trim() !== '' &&
       product.category.trim() !== '' &&
       product.description.trim() !== '' &&

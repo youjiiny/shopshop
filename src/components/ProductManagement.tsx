@@ -1,17 +1,25 @@
-import { useQuery } from '@tanstack/react-query';
-import { getProducts } from 'api/product';
+import { DefaultError, useQuery } from '@tanstack/react-query';
+import { getUploaderProducts } from 'api/product';
 import { GetProductType } from 'types/product';
 import AdminProductCard from './AdminProductCard';
 import SideBar from './SideBar';
+import { useAuthContext } from 'context/AuthContext';
+import { AuthContextType } from 'types/auth';
 
 const ProductManagement = () => {
+  const { user } = useAuthContext() as AuthContextType;
   const {
     isLoading,
     data: products,
     error,
-  } = useQuery<GetProductType[]>({
-    queryKey: ['products'],
-    queryFn: getProducts,
+  } = useQuery<
+    GetProductType[],
+    DefaultError,
+    GetProductType[],
+    [string, string, string]
+  >({
+    queryKey: ['products', 'uploader', user?.uid as string],
+    queryFn: getUploaderProducts,
   });
   if (isLoading) return <p>Loading...</p>;
   return (
