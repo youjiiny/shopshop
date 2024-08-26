@@ -44,7 +44,8 @@ const NewProduct = () => {
   };
   const isValid = () => {
     return mainImage &&
-      //Array.from(subImages!).length > 0 &&
+      subImages &&
+      subImages?.length > 0 &&
       product.name.trim() !== '' &&
       product.category.trim() !== '' &&
       product.description.trim() !== '' &&
