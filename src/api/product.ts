@@ -3,17 +3,20 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   where,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import type { GetProductType, AddProductType } from 'types/product';
+import { QueryFunction } from '@tanstack/react-query';
 
 export const addProduct = async (
   product: AddProductType,
   mainImg: string,
   subImg: string[],
+  uploader: string,
 ) => {
   await setDoc(doc(db, 'products', product.id), {
     ...product,
@@ -21,14 +24,38 @@ export const addProduct = async (
     size: product.size.split(','),
     mainImg,
     subImg,
+    uploader,
+    createdAt: new Date(),
   });
 };
 
 export const getProducts = async () => {
-  const querySnapshot = await getDocs(collection(db, 'products'));
+  const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
   const products = querySnapshot.docs.map((doc) =>
     doc.data(),
   ) as GetProductType[];
+  return products;
+};
+
+export const getUploaderProducts: QueryFunction<
+  GetProductType[],
+  [string, string, string]
+> = async ({ queryKey }) => {
+  const [_1, _2, uid] = queryKey;
+  const q = query(
+    collection(db, 'products'),
+    where('uploader', '==', uid),
+    orderBy('createdAt', 'desc'),
+  );
+  const querySnapshot = await getDocs(q);
+  const products = querySnapshot.docs.map((doc) =>
+    doc.data(),
+  ) as GetProductType[];
+
+  if (!products.length) {
+    throw new Error('No products found!');
+  }
   return products;
 };
 

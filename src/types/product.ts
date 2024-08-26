@@ -18,6 +18,8 @@ export type GetProductType = {
   description: string;
   size: string[];
   heartCount: number;
+  createdAt: Date;
+  uploader: string;
 };
 
 export type ProductSize = {
