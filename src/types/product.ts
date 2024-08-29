@@ -16,7 +16,7 @@ export type GetProductType = {
   price: number;
   category: string;
   description: string;
-  size: string[];
+  size: string;
   heartCount: number;
   createdAt: Date;
   uploader: string;

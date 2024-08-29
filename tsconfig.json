@@ -16,5 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "client.d.ts"],
+  "exclude": ["node_modules"]
 }
