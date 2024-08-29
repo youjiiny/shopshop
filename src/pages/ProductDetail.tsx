@@ -18,6 +18,7 @@ import HeartSvg from 'assets/svg/HeartSvg';
 import { useEffect, useState } from 'react';
 import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
 import { isLikedProduct } from 'api/like';
+import ProductImage from 'components/ProductImage';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -148,7 +149,7 @@ const ProductDetail = () => {
             <option disabled value={''}>
               [사이즈]를 선택하세요.
             </option>
-            {size?.map((s, i) => (
+            {size.split(',').map((s, i) => (
               <option key={i} value={s}>
                 {s}
               </option>
@@ -163,15 +164,7 @@ const ProductDetail = () => {
           </button>
         </div>
       </div>
-      <div className='flex flex-col gap-10'>
-        {subImg?.map((img, i) => (
-          <img
-            className='w-3/5'
-            src={`${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/${img}`}
-            key={i}
-          />
-        ))}
-      </div>
+      <ProductImage id={id as string} subImg={subImg} />
     </>
   );
 };
