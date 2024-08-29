@@ -1,19 +1,19 @@
-import AWS from 'aws-sdk';
-import S3 from 'aws-sdk/clients/s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectsCommand,
+} from '@aws-sdk/client-s3';
 
 type DeleteObject = {
   Key: string;
 };
 
-AWS.config.update({
+const s3Client = new S3Client({
   region: 'ap-northeast-2',
-  accessKeyId: import.meta.env.VITE_S3_ACCESS_KEY_ID,
-  secretAccessKey: import.meta.env.VITE_S3_SECRET_ACCESS_KEY,
-});
-
-export const s3 = new S3({
-  params: { Bucket: import.meta.env.VITE_S3_BUCKET_NAME },
-  region: 'ap-northeast-2',
+  credentials: {
+    accessKeyId: import.meta.env.VITE_S3_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_S3_SECRET_ACCESS_KEY,
+  },
 });
 
 export const uploadProductImg = async ({
@@ -25,21 +25,22 @@ export const uploadProductImg = async ({
   mainImage: File;
   subImage: File[];
 }) => {
-  const representUpload = s3
-    .upload({
+  const representUpload = s3Client.send(
+    new PutObjectCommand({
       Bucket: import.meta.env.VITE_S3_BUCKET_NAME,
       Key: `products/${id}/represent/${mainImage.name}`,
       Body: mainImage,
-    })
-    .promise();
+    }),
+  );
+
   const subUpload = subImage.map((img) =>
-    s3
-      .upload({
+    s3Client.send(
+      new PutObjectCommand({
         Bucket: import.meta.env.VITE_S3_BUCKET_NAME,
         Key: `products/${id}/${img.name}`,
         Body: img,
-      })
-      .promise(),
+      }),
+    ),
   );
   await Promise.all([representUpload, subUpload]);
 
@@ -61,7 +62,7 @@ export const deleteProductImg = async (
       params.Delete.Objects.push({ Key: `products/${id}/${img}` }),
     );
     params.Delete.Objects.push({ Key: `products/${id}/represent/${mainImg}` });
-    await s3.deleteObjects(params).promise();
+    await s3Client.send(new DeleteObjectsCommand(params));
   } catch (err) {
     console.error('err', err);
   }
