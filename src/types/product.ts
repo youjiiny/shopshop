@@ -16,7 +16,7 @@ export type GetProductType = {
   price: number;
   category: string;
   description: string;
-  size: string;
+  size: string | string[];
   heartCount: number;
   createdAt: Date;
   uploader: string;
@@ -52,3 +52,8 @@ export type CartItemType = {
   size: string;
   quantity: number;
 };
+
+export type RegisteredProduct = Omit<
+  GetProductType,
+  'id' | 'heartCount' | 'createdAt' | 'uploader'
+>;

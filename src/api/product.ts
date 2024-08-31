@@ -6,10 +6,15 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import type { GetProductType, AddProductType } from 'types/product';
+import type {
+  GetProductType,
+  AddProductType,
+  RegisteredProduct,
+} from 'types/product';
 import { QueryFunction } from '@tanstack/react-query';
 
 export const addProduct = async (
@@ -49,9 +54,10 @@ export const getUploaderProducts: QueryFunction<
     orderBy('createdAt', 'desc'),
   );
   const querySnapshot = await getDocs(q);
-  const products = querySnapshot.docs.map((doc) =>
-    doc.data(),
-  ) as GetProductType[];
+  const products = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return { ...data, size: data.size.join(',') as string } as GetProductType;
+  });
 
   if (!products.length) {
     throw new Error('No products found!');
@@ -70,4 +76,9 @@ export const getProudctDetail = async (id: string) => {
 
 export const deleteProduct = async (id: string) => {
   await deleteDoc(doc(db, 'products', id));
+};
+
+export const updateProduct = async (id: string, updated: RegisteredProduct) => {
+  const docRef = doc(db, 'products', id);
+  await updateDoc(docRef, updated);
 };

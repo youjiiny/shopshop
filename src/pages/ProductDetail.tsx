@@ -149,11 +149,12 @@ const ProductDetail = () => {
             <option disabled value={''}>
               [사이즈]를 선택하세요.
             </option>
-            {size.split(',').map((s, i) => (
-              <option key={i} value={s}>
-                {s}
-              </option>
-            ))}
+            {Array.isArray(size) &&
+              size?.map((s, i) => (
+                <option key={i} value={s}>
+                  {s}
+                </option>
+              ))}
           </select>
           {selected && <SelectedProduct option={option} />}
           <button

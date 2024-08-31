@@ -19,7 +19,7 @@ const NewProduct = () => {
     size: '',
   });
   const [mainImage, setMainImage] = useState<File | null>();
-  const [subImages, setSubImages] = useState<File[] | null>();
+  const [subImages, setSubImages] = useState<(string | File)[] | null>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { user } = useAuthContext() as AuthContextType;
   const navigate = useNavigate();
@@ -115,9 +115,12 @@ const NewProduct = () => {
             placeholder='제품 설명'
           />
         </div>
-        <MainIMageUploader mainImage={mainImage!} setMainImage={setMainImage} />
+        <MainIMageUploader
+          mainImage={mainImage as File}
+          setMainImage={setMainImage}
+        />
         <ProductImageUploader
-          subImages={subImages!}
+          subImages={subImages as File[]}
           setSubImages={setSubImages}
         />
         <button
