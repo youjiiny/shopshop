@@ -53,7 +53,9 @@ const ProductImageUploader = ({
   };
 
   useEffect(() => {
-    setPrevImgs(subImages?.filter((img) => typeof img === 'string'));
+    setPrevImgs(
+      subImages?.filter((img) => typeof img === 'string') as string[],
+    );
   }, [subImages]);
 
   return (
