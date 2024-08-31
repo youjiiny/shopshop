@@ -52,3 +52,8 @@ export type CartItemType = {
   size: string;
   quantity: number;
 };
+
+export type RegisteredProduct = Omit<
+  GetProductType,
+  'id' | 'heartCount' | 'createdAt' | 'uploader'
+>;

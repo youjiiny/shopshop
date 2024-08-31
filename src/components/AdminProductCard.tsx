@@ -1,6 +1,7 @@
 import { useModalStore } from 'store/modal';
 import { GetProductType } from 'types/product';
 import ProductDeletionModal from './ProductDeletionModal';
+import { Link } from 'react-router-dom';
 
 const AdminProductCard = ({ product }: { product: GetProductType }) => {
   const { id, name, image, price, mainImg, subImg } = product;
@@ -23,7 +24,9 @@ const AdminProductCard = ({ product }: { product: GetProductType }) => {
         <p>{`${price.toLocaleString()}원`}</p>
       </div>
       <div className='flex flex-col gap-2'>
-        <button className='bg-primary text-white p-2'>수정하기</button>
+        <Link to={`/admin/product/edit/${id}`}>
+          <button className='bg-primary text-white p-2'>수정하기</button>
+        </Link>
         <button
           className='bg-primary text-white p-2'
           onClick={() =>

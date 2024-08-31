@@ -9,5 +9,4 @@ export default defineConfig({
   define: {
     global: 'window',
   },
-  resolve: { alias: { stream: 'stream-browserify' } },
 });

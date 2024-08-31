@@ -22,6 +22,7 @@ import OrderHistory from 'pages/OrderHistory';
 import OrderDetail from 'pages/OrderDetail';
 import CancelOrderHistory from 'pages/CancelOrderHistory';
 import ProductManagement from 'components/ProductManagement';
+import EditProduct from 'pages/EditProduct';
 
 const router = createBrowserRouter([
   {
@@ -141,6 +142,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requireUser requireAdmin>
             <ProductManagement />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/product/edit/:id',
+        element: (
+          <ProtectedRoute requireUser requireAdmin>
+            <EditProduct />
           </ProtectedRoute>
         ),
       },
