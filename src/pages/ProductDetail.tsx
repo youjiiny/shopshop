@@ -1,9 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getProudctDetail } from 'api/product';
+import { useQueryClient } from '@tanstack/react-query';
 import { SelectedProduct } from 'components/SelectedProduct';
 import { useProductCountContext } from 'context/ProductCountContext';
 import { useParams } from 'react-router-dom';
-import {
+import type {
   AddCartProductType,
   CartItemType,
   GetProductType,
@@ -19,20 +18,13 @@ import { useEffect, useState } from 'react';
 import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
 import { isLikedProduct } from 'api/like';
 import ProductImage from 'components/ProductImage';
+import { useProductQuery } from 'hooks/useProductQuery';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const {
-    isLoading,
-    error,
-    data: product,
-  } = useQuery<GetProductType>({
-    queryKey: ['products', id],
-    queryFn: () => getProudctDetail(id as string),
-  });
+  const { isProductLoading, product } = useProductQuery(id as string);
   const { user } = useAuthContext() as AuthContextType;
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const queryClient = useQueryClient();
   const { openModal } = useModalStore();
   const {
     size: option,
@@ -41,7 +33,8 @@ const ProductDetail = () => {
     selectProduct,
   } = useProductCountContext() as ProductCountContextType;
   const { addToCartMutate } = useCartQuery();
-  const { likeMutate, unlikeMutate } = useLikeProductQuery(id!);
+  const { likeMutate, unlikeMutate } = useLikeProductQuery(id as string);
+  const queryClient = useQueryClient();
 
   const handleLike = () => {
     if (isLiked) {
@@ -108,8 +101,7 @@ const ProductDetail = () => {
     }
   }, [user?.uid]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>{error.message}</p>;
+  if (isProductLoading) return <p>Loading...</p>;
   const { name, mainImg, subImg, image, description, price, size } =
     product as GetProductType;
 

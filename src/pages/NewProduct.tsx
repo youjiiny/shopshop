@@ -1,8 +1,8 @@
 import { uploadProductImg } from 'api/aws';
-import { addProduct } from 'api/product';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
 import { useAuthContext } from 'context/AuthContext';
+import { useProductQuery } from 'hooks/useProductQuery';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -23,6 +23,7 @@ const NewProduct = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { user } = useAuthContext() as AuthContextType;
   const navigate = useNavigate();
+  const { addProductMutate } = useProductQuery();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -33,14 +34,18 @@ const NewProduct = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsUploading(true);
-    //const id = await addProduct
     const id = uuidv4();
     const { mainImg, subImg } = await uploadProductImg({
       id,
       mainImage: mainImage as File,
       subImage: subImages as File[],
     });
-    await addProduct({ ...product, id }, mainImg, subImg, user?.uid as string);
+    addProductMutate({
+      product: { ...product, id },
+      mainImg,
+      subImg,
+      uploader: user?.uid as string,
+    });
     toast.success('제품이 추가되었습니다.');
     setIsUploading(false);
     navigate('/');

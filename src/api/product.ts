@@ -17,12 +17,17 @@ import type {
 } from 'types/product';
 import { QueryFunction } from '@tanstack/react-query';
 
-export const addProduct = async (
-  product: AddProductType,
-  mainImg: string,
-  subImg: string[],
-  uploader: string,
-) => {
+export const addProduct = async ({
+  product,
+  mainImg,
+  subImg,
+  uploader,
+}: {
+  product: AddProductType;
+  mainImg: string;
+  subImg: string[];
+  uploader: string;
+}) => {
   await setDoc(doc(db, 'products', product.id), {
     ...product,
     price: Number(product.price),
@@ -65,7 +70,11 @@ export const getUploaderProducts: QueryFunction<
   return products;
 };
 
-export const getProudctDetail = async (id: string) => {
+export const getProudctDetail: QueryFunction<
+  GetProductType,
+  [string, string]
+> = async ({ queryKey }) => {
+  const [_, id] = queryKey;
   const q = query(collection(db, 'products'), where('id', '==', id));
   const querySnapshot = await getDocs(q);
   const product = querySnapshot.docs.map((doc) =>
@@ -78,7 +87,13 @@ export const deleteProduct = async (id: string) => {
   await deleteDoc(doc(db, 'products', id));
 };
 
-export const updateProduct = async (id: string, updated: RegisteredProduct) => {
+export const updateProduct = async ({
+  id,
+  updated,
+}: {
+  id: string;
+  updated: RegisteredProduct;
+}) => {
   const docRef = doc(db, 'products', id);
   await updateDoc(docRef, updated);
 };
