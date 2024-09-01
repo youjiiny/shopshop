@@ -1,23 +1,18 @@
-import { useQuery } from '@tanstack/react-query';
 import { updateProductImg } from 'api/aws';
-import { getProudctDetail, updateProduct } from 'api/product';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
+import { useProductQuery } from 'hooks/useProductQuery';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { GetProductType, RegisteredProduct } from 'types/product';
 
 const EditProduct = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const {
-    isLoading,
-    error,
-    data: goods,
-  } = useQuery<GetProductType>({
-    queryKey: ['products', id],
-    queryFn: () => getProudctDetail(id as string),
-  });
+    isProductLoading,
+    product: goods,
+    updateProductMutate,
+  } = useProductQuery(id);
   const [product, setProduct] = useState<RegisteredProduct>({
     name: '',
     mainImg: '',
@@ -30,6 +25,7 @@ const EditProduct = () => {
   const [mainImage, setMainImage] = useState<string | File | null>();
   const [subImages, setSubImages] = useState<(string | File)[]>();
   const [deleteImages, setDeleteImages] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,6 +51,7 @@ const EditProduct = () => {
       );
       setSubImages((prev) => prev?.filter((img) => img !== null));
     }
+
     await updateProductImg({
       id: id as string,
       deleted: deleteImages && deleteImages.length > 0 ? deleteImages : [],
@@ -64,7 +61,7 @@ const EditProduct = () => {
           ? (subImages.filter((img) => img instanceof File) as File[])
           : null,
     });
-    await updateProduct(id as string, product);
+    updateProductMutate({ id: id as string, updated: product });
     navigate('/');
   };
   const handleChange = (
@@ -92,7 +89,7 @@ const EditProduct = () => {
       goods?.price !== product.price ||
       goods?.category !== product.category ||
       goods?.description !== product.description ||
-      (Array.isArray(goods.size) && goods?.size.join(',') !== product.size)
+      (Array.isArray(goods?.size) && goods?.size.join(',') !== product.size)
     ) {
       return true;
     }
@@ -109,7 +106,7 @@ const EditProduct = () => {
     }
   }, [goods, id]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isProductLoading) return <p>Loading...</p>;
   const { name, price, category, description, size, mainImg, subImg } = product;
 
   return (
@@ -186,7 +183,7 @@ const EditProduct = () => {
         />
         <button
           className='h-14 mt-4 bg-primary rounded disabled:bg-neutral-300 text-2xl text-white'
-          disabled={!isValid()}
+          disabled={!goods || !isValid()}
         >
           수정하기
         </button>

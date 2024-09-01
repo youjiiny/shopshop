@@ -1,27 +1,24 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteProductImg } from 'api/aws';
-import { deleteProduct } from 'api/product';
+import { useProductQuery } from 'hooks/useProductQuery';
 import { useState } from 'react';
 import { useModalStore } from 'store/modal';
 
 type Props = { id: string; mainImg: string; subImg: string[] };
 
 const ProductDeletionModal = ({ product }: { product: Props }) => {
-  const queryClient = useQueryClient();
   const { closeModal } = useModalStore();
   const { id, mainImg, subImg } = product;
   const [message, setMessage] = useState<string>('');
 
-  const deleteProductMutate = useMutation({
-    mutationFn: deleteProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      setMessage('제품이 성공적으로 삭제되었습니다.');
-    },
-  });
+  const { deleteProductMutate } = useProductQuery();
   const handleDelete = () => {
-    deleteProductMutate.mutate(id);
-    deleteProductImg(id, mainImg, subImg);
+    deleteProductMutate(id, {
+      onSuccess: () => {
+        deleteProductImg(id, mainImg, subImg).then(() => {
+          setMessage('제품이 성공적으로 삭제되었습니다.');
+        });
+      },
+    });
   };
 
   return (
