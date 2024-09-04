@@ -42,9 +42,10 @@ export const addProduct = async ({
 export const getProducts = async () => {
   const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(q);
-  const products = querySnapshot.docs.map((doc) =>
-    doc.data(),
-  ) as GetProductType[];
+  const products = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return { ...data, size: data.size.join(',') as string } as GetProductType;
+  });
   return products;
 };
 
@@ -77,9 +78,14 @@ export const getProudctDetail: QueryFunction<
   const [_, id] = queryKey;
   const q = query(collection(db, 'products'), where('id', '==', id));
   const querySnapshot = await getDocs(q);
-  const product = querySnapshot.docs.map((doc) =>
-    doc.data(),
-  )[0] as GetProductType;
+  const product = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return { ...data, size: data.size.join(',') as string } as GetProductType;
+  })[0];
+  // const products = querySnapshot.docs.map((doc) => {
+  //   const data = doc.data();
+  //   return { ...data, size: data.size.join(',') as string } as GetProductType;
+  // });
   return product;
 };
 

@@ -58,7 +58,13 @@ const ProductDetail = () => {
       'myCart',
       user?.uid as string,
     ]);
-    const addProduct = { id, name, image, price } as AddCartProductType;
+    const addProduct = {
+      id,
+      name,
+      image: `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${product?.mainImg}`,
+      price,
+    } as AddCartProductType;
+
     // 장바구니에 담긴 상품이 있으면
     if (products) {
       // 선택한 상품들 중 장바구니에 담지 않은 상품들로 필터링
@@ -108,19 +114,34 @@ const ProductDetail = () => {
   return (
     <>
       <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
-        <img
-          className='w-full basis-1/2 md:w-140 md:h-140'
-          src={
-            mainImg
-              ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
-              : image
-          }
-          alt={'상품 이미지'}
-        />
-        <div className='w-full basis-1/2 flex flex-col gap-2 pl-10'>
+        <picture>
+          {/* <source
+            srcSet={
+              mainImg
+                ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
+                : image
+            }
+            type='image/webp'
+            media=''
+          /> */}
+          <img
+            className='w-full basis-1/2 md:w-72 lg:w-96'
+            src={
+              mainImg
+                ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
+                : image
+            }
+            sizes='(max-width: 500px) 444px,
+         (max-width: 800px) 777px,
+         1222px'
+            // sizes='(max-width:768px) 376px,(max-width:1024px) 400px'
+            alt={'상품 이미지'}
+          />
+        </picture>
+        <div className='w-full flex flex-col gap-2 pl-10'>
           <div className='flex justify-between'>
-            <h3 className='text-xl font-semibold'>{name}</h3>
-            <button onClick={handleLike}>
+            <h2 className='text-xl font-semibold'>{name}</h2>
+            <button onClick={handleLike} aria-label='like Product'>
               <HeartSvg isLiked={isLiked} size={'26'} />
             </button>
           </div>
@@ -137,16 +158,16 @@ const ProductDetail = () => {
             onChange={handleSelect}
             //defaultValue={''}
             value={''}
+            aria-label='size'
           >
             <option disabled value={''}>
               [사이즈]를 선택하세요.
             </option>
-            {Array.isArray(size) &&
-              size?.map((s, i) => (
-                <option key={i} value={s}>
-                  {s}
-                </option>
-              ))}
+            {size.split(',')?.map((s, i) => (
+              <option key={i} value={s} label={s}>
+                {s}
+              </option>
+            ))}
           </select>
           {selected && <SelectedProduct option={option} />}
           <button
