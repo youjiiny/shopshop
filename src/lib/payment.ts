@@ -15,10 +15,12 @@ export const handlePayment = ({
   name,
   address,
   phone,
+  price,
 }: {
   name: string;
   address: Address;
   phone: string;
+  price: number;
 }) => {
   return new Promise<CallbackReturn>((resolve, reject) => {
     if (!window.IMP) return;
@@ -31,7 +33,7 @@ export const handlePayment = ({
       pay_method: 'card',
       pg: 'html5_inicis',
       merchant_uid: `ORD-${new Date().getTime()}`,
-      amount: 100,
+      amount: price,
       name: 'Shopshop 쇼핑몰',
       buyer_name: name,
       buyer_tel: phone,
