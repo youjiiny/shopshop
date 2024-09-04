@@ -72,6 +72,7 @@ const PaymentInfo = ({ receiver, address }: Props) => {
       name: receiver.name as string,
       address: address as Address,
       phone,
+      price: ((totalPrice as number) + SHIPPING) as number,
     });
     if (isSuccess) {
       try {
