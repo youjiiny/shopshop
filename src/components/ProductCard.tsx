@@ -5,6 +5,8 @@ import { AuthContextType } from 'types/auth';
 import { useEffect, useState } from 'react';
 import HeartSvg from 'assets/svg/HeartSvg';
 import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
+import { useModalStore } from 'store/modal';
+import LoginRequestModal from './LoginRequestModal';
 
 type Props = { product: GetProductType; likedProducts: string[] };
 
@@ -13,10 +15,15 @@ const ProductCard = ({ product, likedProducts }: Props) => {
   const { user } = useAuthContext() as AuthContextType;
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const { likeMutate, unlikeMutate } = useLikeProductQuery(id);
+  const { openModal } = useModalStore();
   const navigate = useNavigate();
 
   const handleLike = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (!user?.uid) {
+      openModal(<LoginRequestModal />);
+      return;
+    }
     if (isLiked) {
       unlikeMutate({ uid: user?.uid as string, productId: id });
     } else {

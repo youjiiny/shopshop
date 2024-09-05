@@ -19,6 +19,7 @@ import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
 import { isLikedProduct } from 'api/like';
 import ProductImage from 'components/ProductImage';
 import { useProductQuery } from 'hooks/useProductQuery';
+import LoginRequestModal from 'components/LoginRequestModal';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -37,6 +38,10 @@ const ProductDetail = () => {
   const queryClient = useQueryClient();
 
   const handleLike = () => {
+    if (!user?.uid) {
+      openModal(<LoginRequestModal />);
+      return;
+    }
     if (isLiked) {
       unlikeMutate({ uid: user?.uid as string, productId: id as string });
     } else {
