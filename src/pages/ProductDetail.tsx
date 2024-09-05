@@ -14,18 +14,19 @@ import AddToCartModal from 'components/AddToCartModal';
 import { AuthContextType } from 'types/auth';
 import { useCartQuery } from 'hooks/useCartQuery';
 import HeartSvg from 'assets/svg/HeartSvg';
-import { useEffect, useState } from 'react';
-import { useLikeProductQuery } from 'hooks/useLikeProductQuery';
-import { isLikedProduct } from 'api/like';
 import ProductImage from 'components/ProductImage';
 import { useProductQuery } from 'hooks/useProductQuery';
 import LoginRequestModal from 'components/LoginRequestModal';
+import { useLike } from 'hooks/useLike';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { isProductLoading, product } = useProductQuery(id as string);
   const { user } = useAuthContext() as AuthContextType;
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, handleLikeMutate] = useLike({
+    uid: user?.uid as string,
+    productId: id as string,
+  });
   const { openModal } = useModalStore();
   const {
     size: option,
@@ -34,7 +35,6 @@ const ProductDetail = () => {
     selectProduct,
   } = useProductCountContext() as ProductCountContextType;
   const { addToCartMutate } = useCartQuery();
-  const { likeMutate, unlikeMutate } = useLikeProductQuery(id as string);
   const queryClient = useQueryClient();
 
   const handleLike = () => {
@@ -42,12 +42,7 @@ const ProductDetail = () => {
       openModal(<LoginRequestModal />);
       return;
     }
-    if (isLiked) {
-      unlikeMutate({ uid: user?.uid as string, productId: id as string });
-    } else {
-      likeMutate({ uid: user?.uid as string, productId: id as string });
-    }
-    setIsLiked((prev) => !prev);
+    handleLikeMutate();
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -98,19 +93,6 @@ const ProductDetail = () => {
       });
     }
   };
-  const checkIsLiked = async () => {
-    const liked = await isLikedProduct({
-      uid: user?.uid as string,
-      id: id as string,
-    });
-    setIsLiked(liked);
-  };
-
-  useEffect(() => {
-    if (user?.uid) {
-      checkIsLiked();
-    }
-  }, [user?.uid]);
 
   if (isProductLoading) return <p>Loading...</p>;
   const { name, mainImg, subImg, image, description, price, size } =
