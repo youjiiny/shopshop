@@ -45,7 +45,12 @@ const ProductCard = ({ product, likedProducts }: Props) => {
       <div className='mt-2 px-2'>
         <h3 className='truncate'>{name}</h3>
         <p className='font-semibold text-price'>{`${price.toLocaleString()}원`}</p>
-        <button className='flex items-center' onClick={handleLike}>
+        <button
+          className='flex items-center'
+          onClick={handleLike}
+          disabled={user?.isAdmin}
+          title={user?.isAdmin ? '좋아요는 일반 회원만 가능합니다.' : ''}
+        >
           <HeartSvg isLiked={isLiked} />
           <p className='m-1'>{heartCount || 0}</p>
         </button>
