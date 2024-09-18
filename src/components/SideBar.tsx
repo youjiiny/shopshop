@@ -16,7 +16,7 @@ const SideBar = () => {
         <>
           <h4 className='font-bold mb-2'>운영관리</h4>
           <ul className='text-sm text-light-gray mb-8'>
-            <li>
+            <li className='py-1'>
               <NavLink to='/admin/product' className={setActiveLinkStyle}>
                 상품관리
               </NavLink>
@@ -24,7 +24,7 @@ const SideBar = () => {
           </ul>
           <h4 className='font-bold mb-2'>나의 계정 설정</h4>
           <ul className='text-sm text-light-gray'>
-            <li>
+            <li className='py-1'>
               <NavLink to='/mypage/edit/info' className={setActiveLinkStyle}>
                 회원정보 수정
               </NavLink>
