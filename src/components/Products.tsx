@@ -10,7 +10,7 @@ const Products = () => {
   const { isProductsLoading, products } = useProductQuery();
   const [likedProducts, setLikedProducts] = useState<string[]>([]);
   const getLikedProductId = async () => {
-    const likedIds = await getLikedProduct({ uid: user?.uid as string });
+    const likedIds = await getLikedProduct(user?.uid as string);
     setLikedProducts(likedIds);
   };
 

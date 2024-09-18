@@ -1,8 +1,11 @@
-import SideBar from 'components/SideBar';
-import { Outlet } from 'react-router-dom';
+import LikedProducts from 'components/LikedProducts';
 
 const MyPage = () => {
-  return <>마이페이지</>;
+  return (
+    <div className='w-full'>
+      <LikedProducts />
+    </div>
+  );
 };
 
 export default MyPage;

@@ -57,3 +57,8 @@ export type RegisteredProduct = Omit<
   GetProductType,
   'id' | 'heartCount' | 'createdAt' | 'uploader'
 >;
+
+export type LikedProductType = Pick<
+  GetProductType,
+  'id' | 'name' | 'price' | 'mainImg'
+>;

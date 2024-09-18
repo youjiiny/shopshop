@@ -14,8 +14,10 @@ import type {
   GetProductType,
   AddProductType,
   RegisteredProduct,
+  LikedProductType,
 } from 'types/product';
 import { QueryFunction } from '@tanstack/react-query';
+import { getLikedProduct } from './like';
 
 export const addProduct = async ({
   product,
@@ -82,10 +84,6 @@ export const getProudctDetail: QueryFunction<
     const data = doc.data();
     return { ...data, size: data.size.join(',') as string } as GetProductType;
   })[0];
-  // const products = querySnapshot.docs.map((doc) => {
-  //   const data = doc.data();
-  //   return { ...data, size: data.size.join(',') as string } as GetProductType;
-  // });
   return product;
 };
 
@@ -101,5 +99,26 @@ export const updateProduct = async ({
   updated: RegisteredProduct;
 }) => {
   const docRef = doc(db, 'products', id);
-  await updateDoc(docRef, updated);
+  const product = { ...updated, size: updated.size.split(',') };
+  await updateDoc(docRef, product);
+};
+
+export const getLikedProducts: QueryFunction<
+  LikedProductType[],
+  [string, string, string]
+> = async ({ queryKey }) => {
+  const [_1, uid] = queryKey;
+  const likedIds = await getLikedProduct(uid);
+  const q = query(collection(db, 'products'), where('id', 'in', likedIds));
+  const querySnapshot = await getDocs(q);
+  const products = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: data.id,
+      name: data.name,
+      price: data.price,
+      mainImg: data.mainImg,
+    };
+  });
+  return products;
 };
