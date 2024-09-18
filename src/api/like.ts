@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 
-export const getLikedProduct = async ({ uid }: { uid: string }) => {
+export const getLikedProduct = async (uid: string) => {
   const q = query(collection(db, 'productHeart'), where('uid', '==', uid));
   const querySnapshot = await getDocs(q);
   const likeIds = querySnapshot.docs.map(
