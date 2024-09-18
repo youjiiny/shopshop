@@ -20,7 +20,7 @@ const Navbar = () => {
       </Link>
       <nav className='flex items-center gap-4'>
         <Link to='/products'>Products</Link>
-        <Link to='/carts'>
+        <Link to='/carts' aria-label='Go to shopping cart'>
           <CartStatus />
         </Link>
         {user?.isAdmin && (
@@ -30,7 +30,7 @@ const Navbar = () => {
         )}
         {!user && <Link to='/signin'>Login</Link>}
         {user && (
-          <Link to='/mypage'>
+          <Link to={user?.isAdmin ? '/admin/product' : '/mypage'}>
             <FaUser />
           </Link>
         )}
