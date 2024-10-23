@@ -101,15 +101,19 @@ const ProductDetail = () => {
   return (
     <>
       <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
-        <img
-          className='w-full basis-1/2 md:w-72 lg:w-96'
-          src={
-            mainImg
-              ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
-              : image
-          }
-          alt={'상품 이미지'}
-        />
+        <div className='w-[400px] h-[400px] shrink-0 overflow-hidden'>
+          <img
+            className='object-cover object-center'
+            src={
+              mainImg
+                ? `${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${mainImg}?w=800&h=800`
+                : image
+            }
+            alt={'상품 이미지'}
+            width={400}
+            height={400}
+          />
+        </div>
         <div className='w-full flex flex-col gap-2 pl-10'>
           <div className='flex justify-between'>
             <h2 className='text-xl font-semibold'>{name}</h2>
@@ -140,11 +144,12 @@ const ProductDetail = () => {
             <option disabled value={''}>
               [사이즈]를 선택하세요.
             </option>
-            {size.split(',')?.map((s, i) => (
-              <option key={i} value={s} label={s}>
-                {s}
-              </option>
-            ))}
+            {size &&
+              size.split(',')?.map((s, i) => (
+                <option key={i} value={s} label={s}>
+                  {s}
+                </option>
+              ))}
           </select>
           {selected && <SelectedProduct option={option} />}
           <button
