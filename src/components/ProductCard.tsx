@@ -10,7 +10,7 @@ import { useLike } from 'hooks/useLike';
 type Props = { product: GetProductType; likedProducts: string[] };
 
 const ProductCard = ({ product, likedProducts }: Props) => {
-  const { id, name, mainImg, subImg, image, price, heartCount } = product;
+  const { id, name, mainImg, price, heartCount } = product;
   const { user } = useAuthContext() as AuthContextType;
   const [isLiked, handleLikeMutate] = useLike({
     uid: user?.uid as string,
@@ -33,13 +33,10 @@ const ProductCard = ({ product, likedProducts }: Props) => {
     <li className='cursor-pointer' onClick={() => navigate(`/products/${id}`)}>
       <div>
         <img
-          className='w-96 h-96 md:w-72 md:h-72'
-          src={
-            mainImg
-              ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
-              : image
-          }
+          src={`${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${mainImg}?w=600&h=600`}
           alt='product image'
+          width={300}
+          height={300}
         />
       </div>
       <div className='mt-2 px-2'>

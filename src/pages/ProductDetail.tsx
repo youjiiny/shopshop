@@ -95,7 +95,7 @@ const ProductDetail = () => {
   };
 
   if (isProductLoading) return <p>Loading...</p>;
-  const { name, mainImg, subImg, image, description, price, size } =
+  const { name, mainImg, subImg, description, price, size } =
     product as GetProductType;
 
   return (
@@ -104,11 +104,7 @@ const ProductDetail = () => {
         <div className='w-[400px] h-[400px] shrink-0 overflow-hidden'>
           <img
             className='object-cover object-center'
-            src={
-              mainImg
-                ? `${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${mainImg}?w=800&h=800`
-                : image
-            }
+            src={`${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${mainImg}?w=800&h=800`}
             alt={'상품 이미지'}
             width={400}
             height={400}
