@@ -17,6 +17,7 @@ const Banner = () => {
         <img
           src='/images/banner.jpg'
           className='w-full h-full object-cover object-center'
+          alt='배너'
         />
       </picture>
     </div>
