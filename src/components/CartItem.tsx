@@ -20,12 +20,13 @@ const CartItem = ({ uid, product }: Props) => {
   const handleDelete = () => {
     deleteFromCartMutate({ uid, product });
   };
+  console.log('image', image);
 
   return (
     <li className='flex justify-between items-center p-4 border-b-2'>
       <img
-        className='w-24 h-24 md:w-40 md:h-40 rounded-lg object-contain'
-        src={image}
+        className='mr-5 w-24 h-24 md:w-40 md:h-40 rounded-lg object-contain'
+        src={`${image}?w=320&h=320`}
         alt={'상품 이미지'}
       />
       <div className='flex-1 flex  justify-between'>
