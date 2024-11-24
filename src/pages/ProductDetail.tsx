@@ -61,7 +61,7 @@ const ProductDetail = () => {
     const addProduct = {
       id,
       name,
-      image: `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${product?.mainImg}`,
+      image: `${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${product?.mainImg}`,
       price,
     } as AddCartProductType;
 

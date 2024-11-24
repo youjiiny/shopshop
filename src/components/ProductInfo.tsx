@@ -18,7 +18,7 @@ const ProductInfo = () => {
                 <div className='mr-5'>
                   <img
                     className='w-24 h-24 md:w-40 md:h-40 rounded-lg object-fit cursor-pointer'
-                    src={image}
+                    src={`${image}?w=320&h=320`}
                     alt={'상품 이미지'}
                   />
                 </div>

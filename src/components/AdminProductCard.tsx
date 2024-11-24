@@ -11,12 +11,8 @@ const AdminProductCard = ({ product }: { product: GetProductType }) => {
   return (
     <li className='flex items-center justify-around border py-5'>
       <img
-        className='w-24 h-24'
-        src={
-          mainImg
-            ? `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/represent/${mainImg}`
-            : image
-        }
+        className='w-24 h-24 rounded-md'
+        src={`${import.meta.env.VITE_CLOUDFRONT_URL}/${id}/represent/${mainImg}?w=200&h=200`}
         alt={name}
       />
       <div>
