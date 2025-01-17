@@ -20,6 +20,7 @@ export type GetProductType = {
   heartCount: number;
   createdAt: Date;
   uploader: string;
+  isLiked: boolean;
 };
 
 export type ProductSize = {
@@ -55,10 +56,14 @@ export type CartItemType = {
 
 export type RegisteredProduct = Omit<
   GetProductType,
-  'id' | 'heartCount' | 'createdAt' | 'uploader'
+  'id' | 'heartCount' | 'createdAt' | 'uploader' | 'isLiked'
 >;
 
-export type LikedProductType = Pick<
-  GetProductType,
-  'id' | 'name' | 'price' | 'mainImg'
->;
+export type LikedProductType = {
+  id: string;
+  name: string;
+  price: number;
+  mainImg: string;
+  heartCount: number;
+  isLiked: boolean;
+};

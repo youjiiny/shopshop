@@ -1,5 +1,5 @@
 import { deleteProductImg } from 'api/aws';
-import { useProductQuery } from 'hooks/useProductQuery';
+import { useDeleteProductMutation } from 'hooks/useProductMutation';
 import { useState } from 'react';
 import { useModalStore } from 'store/modal';
 
@@ -10,7 +10,7 @@ const ProductDeletionModal = ({ product }: { product: Props }) => {
   const { id, mainImg, subImg } = product;
   const [message, setMessage] = useState<string>('');
 
-  const { deleteProductMutate } = useProductQuery();
+  const { deleteProductMutate } = useDeleteProductMutation();
   const handleDelete = () => {
     deleteProductMutate(id, {
       onSuccess: () => {

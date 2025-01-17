@@ -15,18 +15,22 @@ import { AuthContextType } from 'types/auth';
 import { useCartQuery } from 'hooks/useCartQuery';
 import HeartSvg from 'assets/svg/HeartSvg';
 import ProductImage from 'components/ProductImage';
-import { useProductQuery } from 'hooks/useProductQuery';
+import { useProductDetailQuery } from 'hooks/useProductQueries';
 import LoginRequestModal from 'components/LoginRequestModal';
-import { useLike } from 'hooks/useLike';
+import { useProductLikeToggle } from 'hooks/useProductLikeToggle';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { isProductLoading, product } = useProductQuery(id as string);
   const { user } = useAuthContext() as AuthContextType;
-  const [isLiked, handleLikeMutate] = useLike({
-    uid: user?.uid as string,
-    productId: id as string,
-  });
+  const { isProductLoading, product } = useProductDetailQuery(
+    id || '',
+    user?.uid,
+  );
+  const { mutate: toggleLikeMutate } = useProductLikeToggle(
+    id || '',
+    product?.isLiked ?? false,
+    user?.uid,
+  );
   const { openModal } = useModalStore();
   const {
     size: option,
@@ -42,7 +46,7 @@ const ProductDetail = () => {
       openModal(<LoginRequestModal />);
       return;
     }
-    handleLikeMutate();
+    toggleLikeMutate({ productId: id || '', uid: user?.uid });
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,9 +69,7 @@ const ProductDetail = () => {
       price,
     } as AddCartProductType;
 
-    // 장바구니에 담긴 상품이 있으면
     if (products) {
-      // 선택한 상품들 중 장바구니에 담지 않은 상품들로 필터링
       const selectedArr = Object.entries(selected);
       const options = selectedArr.filter((option) => {
         const same = products.find(
@@ -76,9 +78,8 @@ const ProductDetail = () => {
         if (same) return;
         return option;
       });
-      // 장바구니에 없는 상품들을 객체로 다시 변환
       const filteredOption = Object.fromEntries(options);
-      if (!options.length) return; // 모두 장바구니에 있으면 스킵
+      if (!options.length) return;
 
       addToCartMutate({
         uid: user?.uid as string,
@@ -95,7 +96,7 @@ const ProductDetail = () => {
   };
 
   if (isProductLoading) return <p>Loading...</p>;
-  const { name, mainImg, subImg, description, price, size } =
+  const { name, mainImg, subImg, description, price, size, isLiked } =
     product as GetProductType;
 
   return (
@@ -133,7 +134,6 @@ const ProductDetail = () => {
           <select
             className='h-8 border border-gray-400 outline-none cursor-pointer'
             onChange={handleSelect}
-            //defaultValue={''}
             value={''}
             aria-label='size'
           >

@@ -1,22 +1,24 @@
-import { GetProductType } from 'types/product';
+import { GetProductType, LikedProductType } from 'types/product';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'context/AuthContext';
 import { AuthContextType } from 'types/auth';
 import HeartSvg from 'assets/svg/HeartSvg';
 import { useModalStore } from 'store/modal';
 import LoginRequestModal from './LoginRequestModal';
-import { useLike } from 'hooks/useLike';
+import { useProductLikeToggle } from 'hooks/useProductLikeToggle';
 
-type Props = { product: GetProductType; likedProducts: string[] };
+type Props = {
+  product: GetProductType | LikedProductType;
+};
 
-const ProductCard = ({ product, likedProducts }: Props) => {
-  const { id, name, mainImg, price, heartCount } = product;
+const ProductCard = ({ product }: Props) => {
+  const { id, name, mainImg, price, heartCount, isLiked } = product;
   const { user } = useAuthContext() as AuthContextType;
-  const [isLiked, handleLikeMutate] = useLike({
-    uid: user?.uid as string,
-    liked: likedProducts,
-    productId: id,
-  });
+  const { mutate: toggleLikeMutate } = useProductLikeToggle(
+    id,
+    isLiked,
+    user?.uid,
+  );
   const { openModal } = useModalStore();
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const ProductCard = ({ product, likedProducts }: Props) => {
       openModal(<LoginRequestModal />);
       return;
     }
-    handleLikeMutate();
+    toggleLikeMutate({ uid: user?.uid, productId: id });
   };
 
   return (

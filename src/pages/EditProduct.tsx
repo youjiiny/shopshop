@@ -1,18 +1,16 @@
 import { updateProductImg } from 'api/aws';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
-import { useProductQuery } from 'hooks/useProductQuery';
+import { useUpdateProductMutation } from 'hooks/useProductMutation';
+import { useProductDetailQuery } from 'hooks/useProductQueries';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { GetProductType, RegisteredProduct } from 'types/product';
 
 const EditProduct = () => {
   const { id } = useParams();
-  const {
-    isProductLoading,
-    product: goods,
-    updateProductMutate,
-  } = useProductQuery(id);
+  const { isProductLoading, product: goods } = useProductDetailQuery(id || '');
+  const { updateProductMutate } = useUpdateProductMutation();
   const [product, setProduct] = useState<RegisteredProduct>({
     name: '',
     mainImg: '',
@@ -41,7 +39,6 @@ const EditProduct = () => {
         subImages.map(async (img) => {
           if (typeof img === 'string') {
             if (!goods?.subImg.includes(img)) {
-              // 이미 업로드한 파일이 아니라면
               const subUrl = `${import.meta.env.VITE_S3_SHOPSHOP_PRODUCT_URL}/${id}/${img}`;
               return await urlToFile(subUrl, img);
             } else return null;
@@ -69,7 +66,8 @@ const EditProduct = () => {
   ) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setProduct({ ...(product as GetProductType), [name]: value });
+    const changeNumber = name == 'price' ? Number(value) : value;
+    setProduct({ ...(product as GetProductType), [name]: changeNumber });
   };
 
   const urlToFile = async (url: string, fileName: string) => {
@@ -89,7 +87,7 @@ const EditProduct = () => {
       goods?.price !== product.price ||
       goods?.category !== product.category ||
       goods?.description !== product.description ||
-      (Array.isArray(goods?.size) && goods?.size.join(',') !== product.size)
+      goods?.size !== product.size
     ) {
       return true;
     }
@@ -183,7 +181,7 @@ const EditProduct = () => {
         />
         <button
           className='h-14 mt-4 bg-primary rounded disabled:bg-neutral-300 text-2xl text-white'
-          disabled={!goods || !isValid()}
+          disabled={!isValid()}
         >
           수정하기
         </button>
