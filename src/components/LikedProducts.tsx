@@ -26,7 +26,7 @@ const LikedProducts = () => {
   return (
     <>
       <h3 className='text-2xl mb-4 pb-2 border-b-4 border-black'>My Heart</h3>
-      <ul className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-4'>
+      <ul className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
         {products?.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

@@ -80,8 +80,7 @@ export const getUploaderProducts: QueryFunction<
   return products;
 };
 
-export const getProudctDetail = async (id: string, uid?: string) => {
-  //const [_, id] = queryKey;
+export const getProductDetail = async (id: string, uid?: string) => {
   const q = query(collection(db, 'products'), where('id', '==', id));
   const querySnapshot = await getDocs(q);
   const product = querySnapshot.docs.map((doc) => {

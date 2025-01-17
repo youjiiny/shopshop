@@ -2,7 +2,7 @@ import { uploadProductImg } from 'api/aws';
 import MainIMageUploader from 'components/MainImageUploader';
 import ProductImageUploader from 'components/ProductImageUploader';
 import { useAuthContext } from 'context/AuthContext';
-import { useProductQuery } from 'hooks/useProductQuery';
+import { useAddProductMutation } from 'hooks/useProductMutation';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -23,7 +23,7 @@ const NewProduct = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { user } = useAuthContext() as AuthContextType;
   const navigate = useNavigate();
-  const { addProductMutate } = useProductQuery();
+  const { addProductMutate } = useAddProductMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
