@@ -15,18 +15,22 @@ import { AuthContextType } from 'types/auth';
 import { useCartQuery } from 'hooks/useCartQuery';
 import HeartSvg from 'assets/svg/HeartSvg';
 import ProductImage from 'components/ProductImage';
-import { useProductQuery } from 'hooks/useProductQuery';
+import { useProductDetailQuery } from 'hooks/useProductQueries';
 import LoginRequestModal from 'components/LoginRequestModal';
-import { useLike } from 'hooks/useLike';
+import {
+  useLikeMutation,
+  useUnLikeMutation,
+} from 'hooks/useLikeProductMutation';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { isProductLoading, product } = useProductQuery(id as string);
   const { user } = useAuthContext() as AuthContextType;
-  const [isLiked, handleLikeMutate] = useLike({
-    uid: user?.uid as string,
-    productId: id as string,
-  });
+  const { isProductLoading, product } = useProductDetailQuery(
+    id || '',
+    user?.uid,
+  );
+  const { mutate: likeMutate } = useLikeMutation(id || '');
+  const { mutate: unlikeMutate } = useUnLikeMutation(id || '');
   const { openModal } = useModalStore();
   const {
     size: option,
@@ -42,7 +46,11 @@ const ProductDetail = () => {
       openModal(<LoginRequestModal />);
       return;
     }
-    handleLikeMutate();
+    if (isLiked) {
+      unlikeMutate({ productId: id || '', uid: user?.uid });
+    } else {
+      likeMutate({ productId: id || '', uid: user?.uid });
+    }
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -95,7 +103,7 @@ const ProductDetail = () => {
   };
 
   if (isProductLoading) return <p>Loading...</p>;
-  const { name, mainImg, subImg, description, price, size } =
+  const { name, mainImg, subImg, description, price, size, isLiked } =
     product as GetProductType;
 
   return (

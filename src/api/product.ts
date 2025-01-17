@@ -17,7 +17,7 @@ import type {
   LikedProductType,
 } from 'types/product';
 import { QueryFunction } from '@tanstack/react-query';
-import { getLikedProduct } from './like';
+import { getLikedProduct, isLikedProduct } from './like';
 
 export const addProduct = async ({
   product,
@@ -41,13 +41,20 @@ export const addProduct = async ({
   });
 };
 
-export const getProducts = async () => {
+export const getProducts = async (uid?: string) => {
   const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(q);
-  const products = querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return { ...data, size: data.size.join(',') as string } as GetProductType;
-  });
+  const products = await Promise.all(
+    querySnapshot.docs.map(async (doc) => {
+      const data = doc.data();
+      const isLiked = uid ? await isLikedProduct({ uid, id: data.id }) : false;
+      return {
+        ...data,
+        size: data.size.join(',') as string,
+        isLiked,
+      } as GetProductType;
+    }),
+  );
   return products;
 };
 
@@ -73,18 +80,16 @@ export const getUploaderProducts: QueryFunction<
   return products;
 };
 
-export const getProudctDetail: QueryFunction<
-  GetProductType,
-  [string, string]
-> = async ({ queryKey }) => {
-  const [_, id] = queryKey;
+export const getProudctDetail = async (id: string, uid?: string) => {
+  //const [_, id] = queryKey;
   const q = query(collection(db, 'products'), where('id', '==', id));
   const querySnapshot = await getDocs(q);
   const product = querySnapshot.docs.map((doc) => {
     const data = doc.data();
     return { ...data, size: data.size.join(',') as string } as GetProductType;
   })[0];
-  return product;
+  const isLiked = uid ? await isLikedProduct({ uid, id }) : false;
+  return { ...product, isLiked };
 };
 
 export const deleteProduct = async (id: string) => {
@@ -118,6 +123,8 @@ export const getLikedProducts: QueryFunction<
       name: data.name,
       price: data.price,
       mainImg: data.mainImg,
+      heartCount: data.heartCount,
+      isLiked: true,
     };
   });
   return products;
