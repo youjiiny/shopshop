@@ -51,10 +51,14 @@ const updateHeart = (
     );
   }
 };
-export const useLikeMutation = (id: string, uid?: string) => {
+export const useProductLikeToggle = (
+  id: string,
+  isLiked: boolean,
+  uid?: string,
+) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: likeProduct,
+    mutationFn: isLiked ? unlikeProduct : likeProduct,
     onMutate: () => {
       const previousProducts = queryClient.getQueryData<
         Context['previousProducts']
@@ -68,47 +72,7 @@ export const useLikeMutation = (id: string, uid?: string) => {
           )
         : undefined;
 
-      updateHeart(queryClient, id, 1, uid);
-      return { previousProducts, previousProductDetail, previousLikedProducts };
-    },
-    onError: (context: Context) => {
-      if (context?.previousProducts) {
-        queryClient.setQueryData(productKeys.all, context.previousProducts);
-      }
-      if (context?.previousProductDetail) {
-        queryClient.setQueryData(
-          productKeys.all,
-          context.previousProductDetail,
-        );
-      }
-      if (uid && context?.previousLikedProducts) {
-        queryClient.setQueryData(
-          mypageKeys.liked(uid),
-          context.previousLikedProducts,
-        );
-      }
-    },
-  });
-};
-
-export const useUnLikeMutation = (id: string, uid?: string) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: unlikeProduct,
-    onMutate: () => {
-      const previousProducts = queryClient.getQueryData<
-        Context['previousProducts']
-      >(productKeys.all);
-      const previousProductDetail = queryClient.getQueryData<
-        Context['previousProducts']
-      >(productKeys.detail(id));
-      const previousLikedProducts = uid
-        ? queryClient.getQueryData<Context['previousLikedProducts']>(
-            mypageKeys.liked(uid),
-          )
-        : undefined;
-
-      updateHeart(queryClient, id, -1, uid);
+      updateHeart(queryClient, id, isLiked ? -1 : 1, uid);
 
       return { previousProducts, previousProductDetail, previousLikedProducts };
     },

@@ -5,10 +5,7 @@ import { AuthContextType } from 'types/auth';
 import HeartSvg from 'assets/svg/HeartSvg';
 import { useModalStore } from 'store/modal';
 import LoginRequestModal from './LoginRequestModal';
-import {
-  useLikeMutation,
-  useUnLikeMutation,
-} from 'hooks/useLikeProductMutation';
+import { useProductLikeToggle } from 'hooks/useProductLikeToggle';
 
 type Props = {
   product: GetProductType | LikedProductType;
@@ -17,8 +14,11 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const { id, name, mainImg, price, heartCount, isLiked } = product;
   const { user } = useAuthContext() as AuthContextType;
-  const { mutate: likeMutate } = useLikeMutation(id, user?.uid);
-  const { mutate: unlikeMutate } = useUnLikeMutation(id, user?.uid);
+  const { mutate: toggleLikeMutate } = useProductLikeToggle(
+    id,
+    isLiked,
+    user?.uid,
+  );
   const { openModal } = useModalStore();
   const navigate = useNavigate();
 
@@ -28,11 +28,7 @@ const ProductCard = ({ product }: Props) => {
       openModal(<LoginRequestModal />);
       return;
     }
-    if (isLiked) {
-      unlikeMutate({ uid: user?.uid, productId: id });
-    } else {
-      likeMutate({ uid: user?.uid, productId: id });
-    }
+    toggleLikeMutate({ uid: user?.uid, productId: id });
   };
 
   return (
