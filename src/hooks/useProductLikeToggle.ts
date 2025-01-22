@@ -64,7 +64,7 @@ export const useProductLikeToggle = (
         Context['previousProducts']
       >(productKeys.all);
       const previousProductDetail = queryClient.getQueryData<
-        Context['previousProducts']
+        Context['previousProductDetail']
       >(productKeys.detail(id));
       const previousLikedProducts = uid
         ? queryClient.getQueryData<Context['previousLikedProducts']>(
