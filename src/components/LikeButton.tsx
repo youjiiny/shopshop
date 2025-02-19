@@ -1,35 +1,19 @@
-import LoginRequestModal from './LoginRequestModal';
 import HeartSvg from 'assets/svg/HeartSvg';
-import { useAuthContext } from 'context/AuthContext';
-import { useProductLikeToggle } from 'hooks/useProductLikeToggle';
-import { useModalStore } from 'store/modal';
-import { AuthContextType } from 'types/auth';
 
-type Props = { isLiked: boolean; id: string; heartCount?: number };
+type Props = {
+  isLiked: boolean;
+  heartCount?: number;
+  onLike: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled: boolean;
+};
 
-const LikeButton = ({ isLiked, id, heartCount }: Props) => {
-  const { user } = useAuthContext() as AuthContextType;
-  const { mutate: toggleLikeMutate } = useProductLikeToggle(
-    id,
-    isLiked,
-    user?.uid,
-  );
-  const { openModal } = useModalStore();
-  const handleLike = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    if (!user?.uid) {
-      openModal(<LoginRequestModal />);
-      return;
-    }
-    toggleLikeMutate({ uid: user?.uid, productId: id });
-  };
-
+const LikeButton = ({ isLiked, heartCount, onLike, disabled }: Props) => {
   return (
     <button
       className='flex items-center gap-1'
-      onClick={handleLike}
-      disabled={user?.isAdmin}
-      title={user?.isAdmin ? '좋아요는 일반 회원만 가능합니다.' : ''}
+      onClick={onLike}
+      disabled={disabled}
+      title={disabled ? '좋아요는 일반 회원만 가능합니다.' : ''}
     >
       <HeartSvg
         className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-none'}`}

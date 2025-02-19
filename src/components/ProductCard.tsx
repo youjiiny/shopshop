@@ -1,6 +1,7 @@
 import { GetProductType, LikedProductType } from 'types/product';
 import { useNavigate } from 'react-router-dom';
-import LikeButton from './LikeButton';
+
+import LikeButtonContainer from './LikeButtonContainer';
 
 type Props = {
   product: GetProductType | LikedProductType;
@@ -23,7 +24,11 @@ const ProductCard = ({ product }: Props) => {
       <div className='mt-2 px-2'>
         <h3 className='truncate'>{name}</h3>
         <p className='font-semibold text-price mb-1'>{`${price.toLocaleString()}원`}</p>
-        <LikeButton isLiked={isLiked} id={id} heartCount={heartCount} />
+        <LikeButtonContainer
+          isLiked={isLiked}
+          id={id}
+          heartCount={heartCount}
+        />
       </div>
     </li>
   );

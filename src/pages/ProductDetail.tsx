@@ -14,7 +14,7 @@ import { AuthContextType } from 'types/auth';
 import { useCartQuery } from 'hooks/useCartQuery';
 import ProductImage from 'components/ProductImage';
 import { useProductDetailQuery } from 'hooks/useProductQueries';
-import LikeButton from 'components/LikeButton';
+import LikeButtonContainer from 'components/LikeButtonContainer';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -107,7 +107,7 @@ const ProductDetail = () => {
         <div className='w-full flex flex-col gap-2 pl-10'>
           <div className='flex justify-between'>
             <h2 className='text-xl font-semibold'>{name}</h2>
-            <LikeButton isLiked={isLiked} id={productId} />
+            <LikeButtonContainer isLiked={isLiked} id={productId} />
           </div>
           <div className='border-b-2 pb-2'>
             <span className='text-xl font-semibold'>
