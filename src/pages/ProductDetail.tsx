@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import type {
   AddCartProductType,
   CartItemType,
-  GetProductType,
   ProductCountContextType,
 } from 'types/product';
 import { useAuthContext } from 'context/AuthContext';
@@ -13,23 +12,19 @@ import { useModalStore } from 'store/modal';
 import AddToCartModal from 'components/AddToCartModal';
 import { AuthContextType } from 'types/auth';
 import { useCartQuery } from 'hooks/useCartQuery';
-import HeartSvg from 'assets/svg/HeartSvg';
 import ProductImage from 'components/ProductImage';
 import { useProductDetailQuery } from 'hooks/useProductQueries';
-import LoginRequestModal from 'components/LoginRequestModal';
-import { useProductLikeToggle } from 'hooks/useProductLikeToggle';
+import LikeButtonContainer from 'components/LikeButtonContainer';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { user } = useAuthContext() as AuthContextType;
+  const { user, loading } = useAuthContext() as AuthContextType;
   const { isProductLoading, product } = useProductDetailQuery(
     id || '',
     user?.uid,
-  );
-  const { mutate: toggleLikeMutate } = useProductLikeToggle(
-    id || '',
-    product?.isLiked ?? false,
-    user?.uid,
+    {
+      enabled: !loading,
+    },
   );
   const { openModal } = useModalStore();
   const {
@@ -40,14 +35,6 @@ const ProductDetail = () => {
   } = useProductCountContext() as ProductCountContextType;
   const { addToCartMutate } = useCartQuery();
   const queryClient = useQueryClient();
-
-  const handleLike = () => {
-    if (!user?.uid) {
-      openModal(<LoginRequestModal />);
-      return;
-    }
-    toggleLikeMutate({ productId: id || '', uid: user?.uid });
-  };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -95,9 +82,18 @@ const ProductDetail = () => {
     }
   };
 
-  if (isProductLoading) return <p>Loading...</p>;
-  const { name, mainImg, subImg, description, price, size, isLiked } =
-    product as GetProductType;
+  if (isProductLoading || loading) return <p>Loading...</p>;
+  if (!product) return <p>상품을 불러올 수 없습니다.</p>;
+  const {
+    id: productId,
+    name,
+    mainImg,
+    subImg,
+    description,
+    price,
+    size,
+    isLiked,
+  } = product;
 
   return (
     <>
@@ -114,14 +110,7 @@ const ProductDetail = () => {
         <div className='w-full flex flex-col gap-2 pl-10'>
           <div className='flex justify-between'>
             <h2 className='text-xl font-semibold'>{name}</h2>
-            <button
-              onClick={handleLike}
-              aria-label='like Product'
-              disabled={user?.isAdmin}
-              title={user?.isAdmin ? '좋아요는 일반 회원만 가능합니다.' : ''}
-            >
-              <HeartSvg isLiked={isLiked} size={'26'} />
-            </button>
+            <LikeButtonContainer isLiked={isLiked} id={productId} />
           </div>
           <div className='border-b-2 pb-2'>
             <span className='text-xl font-semibold'>
