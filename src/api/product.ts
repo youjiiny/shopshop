@@ -44,18 +44,30 @@ export const addProduct = async ({
 export const getProducts = async (uid?: string) => {
   const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   const querySnapshot = await getDocs(q);
-  const products = await Promise.all(
-    querySnapshot.docs.map(async (doc) => {
+  const likedProductIds = new Set<string>();
+
+  if (uid) {
+    const likedSnapshot = await getDocs(
+      query(collection(db, 'productHeart'), where('uid', '==', uid)),
+    );
+    likedSnapshot.docs.map((doc) => {
       const data = doc.data();
-      const isLiked = uid ? await isLikedProduct({ uid, id: data.id }) : false;
-      return {
-        ...data,
-        size: data.size.join(',') as string,
-        isLiked,
-      } as GetProductType;
-    }),
-  );
-  return products;
+      if (Array.isArray(data.productIds)) {
+        for (const id of data.productIds) {
+          likedProductIds.add(id);
+        }
+      }
+    });
+  }
+
+  return querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      ...data,
+      size: data.size.join(',') as string,
+      isLiked: uid ? likedProductIds.has(data.id) : false,
+    } as GetProductType;
+  });
 };
 
 export const getUploaderProducts: QueryFunction<

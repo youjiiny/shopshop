@@ -1,22 +1,22 @@
 import {
-  collection,
+  arrayRemove,
+  arrayUnion,
   doc,
   getDoc,
-  getDocs,
   increment,
-  query,
   runTransaction,
-  where,
 } from 'firebase/firestore';
 import { db } from './firebase';
 
 export const getLikedProduct = async (uid: string) => {
-  const q = query(collection(db, 'productHeart'), where('uid', '==', uid));
-  const querySnapshot = await getDocs(q);
-  const likeIds = querySnapshot.docs.map(
-    (doc) => doc.data().productId,
-  ) as string[];
-  return likeIds;
+  const heartRef = doc(db, 'productHeart', uid);
+  const heartDoc = await getDoc(heartRef);
+
+  if (!heartDoc.exists()) {
+    return [];
+  }
+  const data = heartDoc.data();
+  return Array.isArray(data.productIds) ? data.productIds : [];
 };
 
 export const isLikedProduct = async ({
@@ -26,9 +26,17 @@ export const isLikedProduct = async ({
   uid: string;
   id: string;
 }) => {
-  const heartRef = doc(db, 'productHeart', `${uid}-${id}`);
+  const heartRef = doc(db, 'productHeart', uid);
   const heartDoc = await getDoc(heartRef);
-  return heartDoc.exists();
+
+  if (!heartDoc.exists()) {
+    return false;
+  }
+  const data = heartDoc.data();
+  if (Array.isArray(data.productIds) && uid) {
+    return data.productIds.includes(id);
+  }
+  return false;
 };
 
 export const likeProduct = async ({
@@ -39,7 +47,7 @@ export const likeProduct = async ({
   productId: string;
 }) => {
   const productRef = doc(db, 'products', productId);
-  const heartRef = doc(db, 'productHeart', `${uid}-${productId}`);
+  const heartRef = doc(db, 'productHeart', uid);
 
   await runTransaction(db, async (transaction) => {
     const productDoc = await transaction.get(productRef);
@@ -47,10 +55,14 @@ export const likeProduct = async ({
     if (!productDoc.exists()) {
       throw new Error('Product does not exist!');
     }
-    if (heartDoc.exists()) {
+    if (!heartDoc.exists()) {
       throw new Error('Document does not exist!');
     }
-    transaction.set(heartRef, { uid, productId });
+    transaction.set(
+      heartRef,
+      { uid, productIds: arrayUnion(productId) },
+      { merge: true },
+    );
     transaction.update(productRef, { heartCount: increment(1) });
   });
 };
@@ -63,10 +75,14 @@ export const unlikeProduct = async ({
   productId: string;
 }) => {
   const productRef = doc(db, 'products', productId);
-  const heartRef = doc(db, 'productHeart', `${uid}-${productId}`);
+  const heartRef = doc(db, 'productHeart', uid);
 
   await runTransaction(db, async (transaction) => {
-    transaction.delete(heartRef);
-    transaction.update(productRef, { heartCount: increment(-1) });
+    transaction.set(
+      heartRef,
+      { productIds: arrayRemove(productId) },
+      { merge: true },
+    ),
+      transaction.update(productRef, { heartCount: increment(-1) });
   });
 };

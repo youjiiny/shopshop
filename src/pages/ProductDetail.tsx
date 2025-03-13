@@ -18,10 +18,13 @@ import LikeButtonContainer from 'components/LikeButtonContainer';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { user } = useAuthContext() as AuthContextType;
+  const { user, loading } = useAuthContext() as AuthContextType;
   const { isProductLoading, product } = useProductDetailQuery(
     id || '',
     user?.uid,
+    {
+      enabled: !loading,
+    },
   );
   const { openModal } = useModalStore();
   const {
@@ -79,7 +82,7 @@ const ProductDetail = () => {
     }
   };
 
-  if (isProductLoading) return <p>Loading...</p>;
+  if (isProductLoading || loading) return <p>Loading...</p>;
   if (!product) return <p>상품을 불러올 수 없습니다.</p>;
   const {
     id: productId,
