@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import OrderProcess from 'components/OrderProcess';
 import { AuthContextType } from 'types/auth';
 import { Link } from 'react-router-dom';
+import MetaTag from 'components/MetaTag';
 
 const MyCart = () => {
   const { user } = useAuthContext() as AuthContextType;
@@ -19,6 +20,7 @@ const MyCart = () => {
   if (!products?.length) {
     return (
       <>
+        <MetaTag title='장바구니 - Shopshop' />
         <OrderProcess />
         <div className='px-12 pt-12 pb-48'>
           <div className='pt-20 text-center  text-4xl border-t-4 md:border-b-2 border-black py-24'>
@@ -46,6 +48,7 @@ const MyCart = () => {
 
   return (
     <>
+      <MetaTag title='장바구니 - Shopshop' />
       <OrderProcess />
       <div className='px-12 pt-12 pb-48'>
         <section>
