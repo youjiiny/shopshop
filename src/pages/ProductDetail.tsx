@@ -15,6 +15,7 @@ import { useCartQuery } from 'hooks/useCartQuery';
 import ProductImage from 'components/ProductImage';
 import { useProductDetailQuery } from 'hooks/useProductQueries';
 import LikeButtonContainer from 'components/LikeButtonContainer';
+import MetaTag from 'components/MetaTag';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -97,6 +98,7 @@ const ProductDetail = () => {
 
   return (
     <>
+      <MetaTag title={`${name} - Shopshop`} />
       <div className='w-full flex flex-col md:flex-row content-between gap-10 p-10'>
         <div className='w-[400px] h-[400px] shrink-0 overflow-hidden'>
           <img

@@ -20,9 +20,11 @@ const Navbar = () => {
       </Link>
       <nav className='flex items-center gap-4'>
         <Link to='/products'>Products</Link>
-        <Link to='/carts' aria-label='Go to shopping cart'>
-          <CartStatus />
-        </Link>
+        {!user?.isAdmin && (
+          <Link to='/carts' aria-label='Go to shopping cart'>
+            <CartStatus />
+          </Link>
+        )}
         {user?.isAdmin && (
           <Link to='products/new'>
             <FaPencilAlt />

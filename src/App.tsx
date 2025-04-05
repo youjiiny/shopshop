@@ -9,6 +9,7 @@ import { ProductCountProvider } from 'context/ProductCountContext';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TabProvider } from 'context/TabContext';
 import Modal from 'components/Modal';
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,19 +23,21 @@ const queryClient = new QueryClient({
 });
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={true} />
-      <AuthProvider>
-        <Navbar />
-        <TabProvider>
-          <ProductCountProvider>
-            <Outlet />
-            <Modal />
-            <ToastContainer />
-          </ProductCountProvider>
-        </TabProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <AuthProvider>
+          <Navbar />
+          <TabProvider>
+            <ProductCountProvider>
+              <Outlet />
+              <Modal />
+              <ToastContainer />
+            </ProductCountProvider>
+          </TabProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 
